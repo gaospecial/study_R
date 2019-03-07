@@ -1,0 +1,486 @@
+---
+title: "R Statistics"
+author: "Gao, Chun-Hui"
+date: "2018年7月27日"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+set.seed(0)
+```
+
+[TOC]
+
+## P-value
+
+「统计学就是个p！」。
+
+### P值是什么？
+
+随便翻开一本统计学课本，我们会看到这样的定义：
+
+> p值是在假定原假设为真时，得到与样本相同或者更极端的结果的概率。
+
+以掷硬币为例，我们的假设是硬币是均匀的，它出现正面和反面的概率相等，都是0.5。据此，则连抛五次出现正面的概率是$0.5^5=0.03125$。这是假设层面的事情——原假设。
+
+我们的备择假设因此是：硬币不是均匀的。
+
+真实世界中，我们真是连抛了5次，还真是出现了5次正面。这个概率是有0.03，根据**“小概率事件不可能发生”**的原理，我们因此认为这太诡异了。肯定（宁愿相信）是我们原来（硬币是均匀的）想错了：硬币肯定不是均匀的。
+
+上述脑回路进行的思考是：对于互斥的两个事件来说，非此即彼——不可能同时发生也不可能一个也不发生。原假设不可信，你们我们选择接受备择假设。
+
+### P值不是什么？
+
+1. P值不是原假设为真的概率，也不是备择假设为假的概率。
+2. P值并不能代表你所发现的效应（或差异）的大小。
+
+对于任何一个假设，它为真的概率都是固定的。然而，我们已经知道p值是根据具体的样本数据计算得出的，同样的实验重复做几次，每次得到不同的样本，p值也自然会有区别。因此，p值不可能是原假设为真或备选假设为假的概率。
+
+p值只描述样本与原假设的相悖程度，原假设的真与假是我们以此为根据做出的一个判断。p值并不能描述原假设和备选假设本身为真的概率。
+
+那么说，我们做实验收数据做分析忙活儿了半天，却依然不能知道我们的假设具体有多大可能是真的？很遗憾，对这个问题的回答是肯定的。我们今天所广泛使用的一整套统计推断和假设检验方法及其思想体系（被称为**「频率学派」**），是由活跃于上世纪的英国统计学家费希尔开创的。p值能做的，就是在特定的零假设条件下对数据特征进行分析。但是，我们如果要对这些假设本身作出判断，光凭数据本身还不够，我们还需要了解现实世界中除了我们感兴趣的假设以外其他假设存在的概率。实际上，假设成立与否的概率是统计学科中另一个近年来日渐受到重视的流派——**贝叶斯学派**——试图解决的问题，也有不少统计学家呼吁科学界应当用贝叶斯方法补充甚至替代如今以p值为中心的方法。这些已经远远超出今天的主题，我们暂时就不展开讨论了。
+
+正如我们说过的，p值只关心数据与原假设之间有多不一致。但是，如果某种效应或差异存在，**p值并不能准确地告诉我们效应的大小，更不能告诉我们这效应是否具有实际意义**。比如说，我们开发了一种降血压药物。在临床试验中，我们比较受试者在服药前后血压的降低，得到了p值小于0.05的显著结果。这意味着什么呢？我们可以有信心地认为，这种药物能够降低受试者的血压。但是，光从p值中，我们无法知道药物到底能使血压降低多少。事实上，也许药物仅仅能够使受试者的血压降低微乎其微的程度（如2mm/Hg），如果我们有足够多的受试者，我们同样能够得到很小的p值，但是这样的效应并没有显著的临床意义，也没有实际的商业价值。P值好不代表实验效果好，这是P值被吐槽的一个原因。
+
+### 为什么P值以0.05为阈值？
+
+那么多小的概率会被认为是小概率呢？一般取值0.05，上面抛硬币取得就是这个值。这个值怎么来的？随便取的！对，就是这么随性。这是费希尔老爷子随口一说的。
+
+另外，0.05的存在也是「前计算机时代」的一个历史遗留产品。九十年代以前，计算机和统计软件还没有被广泛使用，人们进行统计学分析时，往往需要借助统计学表格，把根据样本算出的统计量与表格中的临界值进行比较。由于篇幅所限，表格自然不能列出所有的p值，因此当时的人们都倾向于报告p<0.05的结果。随着统计软件的流行，如今获得精确的p值已不是难事，人们也不再采用这样模糊的表述了。但是0.05这个门槛儿却成为了一种文化，被科学界保留了下来。
+
+本小节以上内容参考：[你真的懂p值吗？](https://mp.weixin.qq.com/s?__biz=MzAxMDA4NjU3OA==&mid=207134405&idx=1&sn=8a4e661a0cd0fad97d869845f2e4b1a2&mpshare=1&scene=23&srcid=0730qv7MkImCakKvvb3vNfJH#rd)
+
+### P值被吐槽的原因
+
+上面提及，P值的结论不能说明效应的大小，是被吐槽的一个原因。P值显著时，还应考虑实际价值才能得出应用的结论。
+
+另一个被吐槽的原因是误判。**小概率事件虽然不怎么发生，但是总是在发生。**连抛硬币五次为正面的概率是0.05，大概相当于如果同样的实验做20次，理论上就会出现一次五次均为正面的情况。
+
+这种情况在临床应用上很关键。比如一款疫苗注射后接种者获得免疫效果的概率是95%。这个概率看起来很高，一个人去接种基本上也会获得疫苗接种的收益。但是，当接种人群达到1亿人时，意味着有$0.05*10^8=5*10^6$个人没有获得免疫。这是一个很严重的问题。
+
+当我们鉴定基因表达差异鉴定时，参与统计的样本数会多大上千个上万个，这时也会出现高假阳性率的问题。
+
+这个时候就要做P值的矫正。
+
+
+## 参数检验
+
+检验方法 | R函数 | 说明
+---------| ----- | ----
+T-test   | `t.test()` | 检验两组样品（参数）
+Wilcoxon test | `wilcox.test()` | 检验两组样品（非参）
+ANOVA    | `aov()`或者`anova()` | 检验多组样本（参数）
+Kruskal-Wallis | `kruskal.test()` | 检验多组样本（非参）
+
+> Wilcoxon检验也被称为Mann-Whitney-Wilcoxon检验。
+
+
+http://www.sthda.com/english/wiki/comparing-means-in-r
+
+## 比较一组样本的平均值（中位数）与一个已知的平均值（中位数）
+
+### 单样本T检验
+
+#### 单样本T检验
+
+
+> 单样本T检验仅适用于样本是正态分布的情况。样本是否服从正态分布可以用Shapiro-Wilk检验（`shapiro.test`）确定。
+
+> T检验适用于比较样本的均值（*m*）与一个已知理论值（*μ*）之间的差异。
+
+
+零假设H0假设可能的情况有以下三种：
+
+1. *m* == *μ*
+2. *m* <= *μ*
+3. *m* >= *μ*
+
+对应的备择假设H1是以下三种：
+
+1. *m* != *μ* (different)
+2. *m* > *μ* (greater)
+3. *m* < *μ* (less)
+
+#### 单样本T检验的公式`t.test`
+
+```{r}
+x <- rnorm(10)
+t.test(x, mu=0, alternative = "two.sided")
+```
+
+- **x**：样本的值
+- **mu**：理论上的均值 *μ*，默认值是0.
+- **alternative**：备择假设，可以是“two.sided”（默认值），“greater”或“less”。
+
+#### 单样本T检验使用实例
+
+##### 生成数据
+
+下面生成十行符合正态分布的数值（均值=20，标准差=2）。
+```{r}
+df <- data.frame(name = LETTERS[1:10],
+                 value=rnorm(n=10,mean=20,sd=2))
+```
+
+##### 检验是否服从正态分布
+
+```{r}
+shapiro.test(df$value)
+
+# 	Shapiro-Wilk normality test
+# 
+# data:  df$value
+# W = 0.96752, p-value = 0.867
+```
+
+结果显示，p值＞0.05，说明样本分布与正态分布之间的差异不明显，样本值服从正态分布。
+
+##### T检验
+
+假设已知的均值 *m* = 25，那么依次进行下列检验。
+
+```{r}
+t.test(df$value, mu = 25)
+
+t.test(df$value, mu = 25, alternative = "less")
+
+t.test(df$value, mu = 25, alternative = "greater")
+
+```
+
+是第一条命令的输出中：
+
+- **t** 是t-test的统计量（-5.6173）
+- **df** 是自由度（df=9）
+- **p-value** 是t-test的显著性水平
+- **conf.int**是平均值的95%置信区间（conf.int=[18.99336, 22,44234]
+- **sample estimates**是样本的均值（mean=20.71785）
+
+这里的 p-value 可以被理解为样本均值不等于25的显著性水平。
+
+### 单样本Wilcoxon Signed Rank检验
+
+单样本Wilcoxon Signed Rank检验与T检验的不同存在以下几点：
+
+- 适用于样本不是正态分布的情况
+- 比较的是样本值中位数（而不是T检验的平均值）
+- 检验的数值必须均匀分布在中位数两侧（否则不适宜使用）
+
+单样本Wilcoxon Sigened Rank检验零假设
+
+1. H0: m=m0
+2. H0: m≤m0
+3. H0: m≥m0
+
+单样本Wilcoxon Sigened Rank检验备择假设
+
+1. Ha:m≠m0 (different)
+2. Ha:m>m0 (greater)
+3. Ha:m<m0 (less)
+
+m是测得样本的中位数，m0是预期的中位数。
+
+#### 单样本Wilcoxon Sigened Rank检验的实例
+
+
+```{r}
+df <- data.frame(name = LETTERS[1:10],
+                 value=rnorm(n=10,mean=20,sd=2))
+
+wilcox.test(df$value, mu = 25)
+
+wilcox.test(df$value, mu = 25, alternative = "less")
+
+wilcox.test(df$value, mu = 25, alternative = "greater")
+
+```
+
+其结果输出较少，以最后一条命令输出为例：
+
+p-value可以用作两个方面。首先p-value大于显著性水平0.05，说明我们需要接受H0假设（即样本中位数≤25）。另外，也可以说样本中位数＞25的显著性水平是1（非常不显著）。
+
+
+## 比较两组独立样本之间均值的差异
+
+### 两个未配对样本的T检验（参数）
+
+> 使用该检验需要满足以下两个条件
+> 1. 两组样本都是正态分布（可用Shapiro-Wilk检验确定）；
+> 2. 两组样本的总体方差是相同的（可用F检验确定）。
+
+
+```{r}
+## Create a data frame
+women_weight <- rnorm(10,50,5)
+men_weight <- rnorm(10,75,20)
+human_weight <- data.frame(group = rep(c("Woman","Man"),each=10),
+                 weight = c(women_weight, men_weight))
+```
+
+要回答三个问题：
+
+1. 这两组数据是独立的吗？是的。它们是分别产生的。
+2. 这两组数据都符合正态分布吗？我们将使用`shapiro.test()`来确定。
+3. 这两组数据的总体方差是一致的吗？我们将使用`var.test()`来确定。
+
+
+```{r}
+## 检验男性体重是否符合正态分布
+with(human_weight, shapiro.test(weight[group=="Man"]))
+## p-value = 0.626
+
+
+## 检验女性体重是否符合正态分布
+with(human_weight, shapiro.test(weight[group=="Woman"]))
+## p-value = 0.867
+```
+
+p-value大于0.05说明数值的分布与正态分布没有显著差异，两组样本因此都是符合正态分布的。
+
+
+```{r}
+var.test(weight ~ group, data=human_weight)
+```
+
+
+结果显示F-test的p-value是0.7286，大于显著性水平0.05。说明两组数值之间的差异不显著，因此认为它们是具有相同的总体方差的。
+
+至此，我们可以调用`t.test()`检验男女体重差异的显著性了。
+
+
+```{r}
+t.test(weight ~ group, data=human_weight, var.equal=T)
+
+t.test(weight ~ group, data=human_weight, var.equal=T, alternative = "less")
+
+t.test(weight ~ group, data=human_weight, var.equal=T, alternative = "greater")
+
+```
+
+以最后一条命令为例：可以得出男性体重均值显著高于女性，其p-value为0.001608。
+
+
+当备择假设为“less”或者“greater”时，比较的对象与group的factor level有关。
+
+```{r}
+summary(human_weight)  # 原始数据
+levels(human_weight$group) # level中Man在Woman前
+
+human_weight2 <- human_weight
+human_weight2$group <- factor(human_weight$group,levels=c("Woman","Man")) # 调节Level顺序
+summary(human_weight2) # 调节level顺序后的数据
+levels(human_weight2$group) # level中Woman在Man前
+
+t.test(weight ~ group, data=human_weight2, var.equal=T, alternative = "less")
+
+```
+
+所以Woman体重在前（51.79），Man在后（67.75）。H0假设是前面≥后面，备择假设是前面＜后面。P值是H0假设发生的概率，为0.001。Woman体重≥Man体重的概率很小，因此认为Woman体重＜Man体重。
+
+
+### 两个未配对样本的Wilcoxon检验（非参）
+
+该检验方法 unpaired two-samples Wilcoxon test 也被称为 Wilcoxon rank sum test 或 Mann-Whitney test。用来检验两组非正态分布也被之间的均值差异。
+
+
+```{r}
+## Method 1
+wilcox.test(women_weight, men_weight)
+
+## Method 2
+wilcox.test(weight ~ group, data = human_weight)
+wilcox.test(weight ~ group, data = human_weight, alternative = "less")
+wilcox.test(weight ~ group, data = human_weight, alternative = "greater")
+```
+
+
+
+## 比较两组配对样本之间的均值
+
+两组配对的样本值之间是有关联的。比如有20只小鼠进行了一个处理X，每只小鼠处理前的体重和处理后的体重分别由测量得到。欲检验处理前后的体重是否有显著差异，适用于此检验情况。
+
+### 配对样本的T检验
+
+配对样本的T检验适用于处理前后的差异（d）服从正态分布的情况。进行一下3步运算：
+
+1. 计算每只小鼠处理前后体重的差值 ***d***；
+2. 计算 ***d*** 的平均值（*m*）和标准差（*s*）。
+3. 将其余均值为0的正态分布比较。当处理显著影响小鼠体重时，平均值*m*将远离0。
+
+### 配对样本的Wilcoxon检验
+
+适用于差异*d*在中位数两侧平均分布的情况。
+
+```{r}
+before <- rnorm(10, 100, 2)
+after <- rnorm(10, 150, 10)
+mice_weight <- data.frame(group=rep(c("before","after"),each=10),
+                          weight=c(before,after))
+## Paired T-test
+t.test(before, after, paired=T)
+t.test(weight ~ group, data = mice_weight, paired = T)
+t.test(weight ~ group, data = mice_weight, paired = T, alternative = "less")
+
+## Paired Wilcoxon-test
+wilcox.test(before, after, paired=T)
+wilcox.test(weight ~ group, data = mice_weight, paired = T)
+wilcox.test(weight ~ group, data = mice_weight, paired = T, alternative = "less")
+
+```
+
+
+默认情况下，factor的level顺序以ABC字母顺序为准。所以after在前，before在后。H1为“less”时，H0为after≥before。其p-value=1，说明基本就是那么回事——after确实≥before。
+
+
+## 比较多组样本之间的均值差异
+
+### 方差分析（ANOVA，参数）
+
+#### 单因素方差分析
+
+http://www.sthda.com/english/wiki/one-way-anova-test-in-r
+
+单因素方差分析是双样本T检验扩展应用于多组样本。这些样本按照单一因素分组故名。
+
+- H0：所有组具有相同的均值。
+- H1：至少有一组样本的均值与其它组不同。
+
+适用条件：
+
+1. 样本取样随机；
+2. 每组样本符合正态分布；
+3. 每组样本正态分布具有相同的方差（可通过Levene检验确认这一点）。
+
+```{r}
+## 数据集包含ctrl和两个处理下植物的生长情况
+data("PlantGrowth")
+
+## ANOVA test
+res.aov <- aov(weight~group, data=PlantGrowth)
+res.aov
+
+summary(res.aov)
+```
+
+P值＜0.05，说明在0.05显著性水平上各组没有差异的零假设不成立，认为至少有一组有差异。
+
+因为各组有差异，可以使用Tukey HSD（Tukey Honest Significant Differences）检验各组之间的差异水平。用的命令是`TukeyHSD()`。
+
+```{r}
+TukeyHSD(res.aov)
+```
+
+#### 检查ANOVA假设：测试有效性？
+
+ANOVA检验假设数据是正态分布的，并且组间的方差是同质的。我们可以用一些诊断图来检查。`plot()`能可视化`aov()`的结果。
+
+##### 查看方差的同质性
+
+
+```{r}
+# 1. 查看方差的同质性（Homogeneity of variances）
+plot(res.aov, 1)
+```
+
+其中，图中标出的 17, 15, 4 被检测为异常值，这会严重影响方差的正态性和均匀性。删除异常值以满足测试假设可能很有用。
+
+同时，也可以使用Bartlett检验（Bartlett’s test）或Levene检验（Levene’s test）来检查方差的同质性。
+
+使用car包下的leveneTest()检验各组方差的均一性，P值表示各组方差不同的显著性水平。
+
+**注意**：这里的car是Companion to Applied Regression的缩写，并非“汽车”。
+
+```{r levene test}
+## 如果P<0.05则表示各组方差不一致(即H0假设各组方差相等)
+car::leveneTest(weight~group, data=PlantGrowth)
+
+```
+
+从上面的输出我们可以看出p值不小于0.05的显着性水平。这意味着没有证据表明不同组间的差异在统计学上有显著差异。因此，我们可以假设不同处理组的方差同质性。
+
+##### 放宽方差分析假设的同质性
+
+当各组方差不一致时，可以使用`oneway.test()`或`pairwise.t.test()`进行方差分析。
+
+
+```{r}
+## ANOVA test with no assumption of equal variances
+oneway.test(weight ~ group, data = PlantGrowth)
+
+## Pairwise t-tests with no assumption of equal variances
+pairwise.t.test(PlantGrowth$weight, PlantGrowth$group,
+                 p.adjust.method = "BH", pool.sd = FALSE)
+```
+
+##### 检查正态假设
+
+`plot()`还可以可视化残差的正态图。图中，残差的分位数相对于正态分布的分位数绘制。还绘制了45度参考线。
+
+```{r check ANOVA normaliy by QQ plot}
+# 2. Normality
+plot(res.aov, 2)
+```
+
+由于所有点大致沿着该参考线分布，我们可以认为数据符合正态性。
+
+与此同时，也可以使用Shapiro-Wilk test（`shapiro.test()`）“定量”的检验ANOVA的残差。
+
+```{r check ANOVA normolity by shapiro.test}
+# Extract the residuals
+aov_residuals <- residuals(object = res.aov )
+# Run Shapiro-Wilk test
+shapiro.test(x = aov_residuals )
+```
+
+
+
+
+
+### Kruskal-Wallis检验（非参，单因素方差分析的备选方案）
+
+当样本不满足单因素方差分析的适用条件时，还可以选用Krusak-Wallis检验（非参）。
+
+适用条件：样本取样非随机，不满足正态分布？
+
+```{r}
+## when ANNOVA assumptions are not met
+kruskal.test(weight ~ group, data = PlantGrowth)
+```
+
+
+#### 双因素方差分析
+
+http://www.sthda.com/english/wiki/two-way-anova-test-in-r
+
+双因素指的是样本按两个因素分组，且
+1. 分组A之间的均值没有差异；
+2. 分组B之间的均值没有差异；
+3. 分组A和分组B之间没有相互影响。
+
+
+
+
+### 多因素方差分析
+
+# 检验的适用情况
+
+同样一组数据，适用情况可能会有很大不同。
+
+
+## 多等级分组条件下的假设检验和P值矫正
+
+```{r}
+set.seed(0)
+df <- data.frame(plot=paste("A",rep(1:4,each=144),sep=""),
+                 site=rep(paste("B",rep(1:6,each=24),sep=""),length.out=576),
+                 group=rep(paste("C",rep(0:7,each=3),sep=""),length.out=576),
+                 value = runif(576))
+df %>% group_by(plot,site,group) -> df 
+  
+compare_means(value~group,df,ref.group = "C0",group.by = c("plot","site"),p.adjust.method = "BH")
+
+ggplot(df, aes(group,value)) + geom_boxplot() + geom_jitter() + facet_grid(plot~site) + ggpubr::stat_compare_means(label="p.signif",ref.group = "C0")
+
+```
+
