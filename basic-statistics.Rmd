@@ -458,8 +458,35 @@ http://www.sthda.com/english/wiki/two-way-anova-test-in-r
 2. 分组B之间的均值没有差异；
 3. 分组A和分组B之间没有相互影响。
 
+与之对应，1和2的备择假设是：均值有差异；
 
+3的备择假设是：A和B之间有相互作用。
 
+```{r}
+my_data <- ToothGrowth
+my_data$dose <- factor(my_data$dose, levels=c(0.5,1,2),labels=c("D0.5","D1","D2"))
+head(my_data)
+
+# frequencty table
+table(my_data$supp, my_data$dose)
+
+# two-way ANOVA test
+res.aov2 <- aov(len ~ supp + dose, data=my_data)
+summary(res.aov2)
+```
+
+这个结果会分别对supp和dose给出P值，可以看出不管是supp（给药方式）还是dose（剂量）都显著，
+均能影响牙齿的生长。
+
+```{r}
+# Two-way ANOVA with interaction effect
+# These two calls are equivalent
+res.aov3 <- aov(len ~ supp * dose, data = my_data)
+res.aov3 <- aov(len ~ supp + dose + supp:dose, data = my_data)
+summary(res.aov3)
+```
+
+上面的结果，又附加说明两个主要因素之间的相互作用对牙齿生长也有显著影响。
 
 ### 多因素方差分析
 
