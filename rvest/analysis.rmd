@@ -1,0 +1,16 @@
+---
+title: 解读《热心肠日报》
+author: "gaospecial@gmail.com"
+date: "`r Sys.Date()`"
+---
+  
+```{r}
+library(tidyverse)
+article_list <- readRDS("article_list.rds")
+article_list <- lapply(article_list, function(x)sapply(x, function(s)gsub("\\s"," ",s)))
+
+articles <- do.call("rbind",article_list)
+articles <- as_tibble(articles)
+head(articles)
+```
+
