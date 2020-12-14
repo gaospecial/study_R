@@ -1,0 +1,26 @@
+---
+title: "Zotero report word cloud"
+author: "Gao, Chun-Hui"
+date: "2019/6/22"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 为zetero report做一个词云
+
+生成Zotero Report之后，将网页保存下来，然后导入`rvest`包抓取每篇文献的Abstract，使用Wordle 生成词云。
+
+```{r}
+file <- "Zotero Report.html"
+library(rvest)
+Page.src <- read_html(file)
+names <- html_nodes(Page.src,".item") %>% html_nodes("tr") %>% html_nodes("th")
+values <- html_nodes(Page.src,".item") %>% html_nodes("tr") %>% html_nodes("td") %>% html_text()
+idx <- grep("Abstract",names)
+abstracts <- values[idx]
+readr::write_csv(as.data.frame(abstracts),"abstracts.csv")
+```
+

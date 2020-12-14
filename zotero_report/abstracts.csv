@@ -1,0 +1,271 @@
+abstracts
+"大肠杆菌是人和动物胃肠道的主要兼性厌氧菌群,既能在宿主体内生存,也能吸附在环境中的固体介质表面形成生物膜而得以存活和传播。吸
+附是生物膜形成的关键,它能改变细胞运动性和代谢等相关基因的表达,进而影响细胞的性质和行为。细菌对表面的""感知""以及初始吸附后细胞的""响应""过程统
+称为""表面感应""。对细菌表面感应机制的研究有助于我们加深对微生物尤其是病原菌在土壤环境中的存活和迁移,以及土壤生物膜形成过程的理解。本文结合多种
+微生物表面感应的研究进展,阐述了表面感应的概念,重点关注了近期有关大肠杆菌表面感应的研究,并对未来工作进行了展望。"
+"自然界中的微生物大多以多物种生物膜的形式存在,这种生命形式可以增加微生物对外界环境胁迫的耐受性。在多物种生物膜中,微生物之间
+的相互作用包括合作、竞争、信号分子的传递、以及水平基因转移等。研究自然环境中多物种生物膜内部微生物之间的相互作用,不仅对于理解自然生物膜的形成和
+演替过程具有重要意义,而且也可以为多物种生物膜在环境质量提升、微生物多样性维持等方面提供理论指导。本文主要分为两个部分:第一部分总结了环境中多物
+种生物膜的研究方法,包括实验室模拟体系下生物膜的构建及其分析检测技术;第二部分论述了天然多物种生物膜内细菌间的相互作用。"
+"The multiple-antibiotic resistance regulator (MarR) plays an 
+important role in modulating bacterial antibiotic resistance. However, 
+the regulatory model of the marRAB operon in mycobacteria remains to be 
+characterized. Here we report that a MarR, encoded by Ms6508, and its 
+marRAB operon specifically contribute to rifampicin (RIF) resistance in 
+Mycobacterium smegmatis. We show that the MarR recognizes a conserved 
+21-bp palindromic motif and negatively regulates the expression of two 
+ABC transporters in the operon, encoded by Ms6509–6510. Unlike other 
+known drug efflux pumps, overexpression of these two ABC transporters 
+unexpectedly increased RIF sensitivity and deletion of these two genes 
+increased mycobacterial resistance to the antibiotic. No change can be 
+detected for the sensitivity of recombinant mycobacterial strains to 
+three other anti-TB drugs. Furthermore, HPLC experiments suggested that 
+Ms6509–Ms6510 could pump RIF into the mycobacterial cells. These 
+findings indicated that the mycobacterial MarR functions as a repressor 
+and constitutively inhibits the expression of the marRAB operon, which 
+specifically contributes to RIF resistance in M. smegmatis. Therefore, 
+our data suggest a new regulatory mechanism of RIF resistance and also 
+provide the new insight into the regulatory model of a marRAB operon in 
+mycobacteria."
+"Transcriptional regulation plays a critical role in the life 
+cycle of Mycobacterium smegmatis and its related species, M. 
+tuberculosis, the causative microbe for tuberculosis. However, the key 
+transcriptional factors involved in broad regulation of diverse genes 
+remain to be characterized in mycobacteria. In the present study, a 
+TetR-like family transcriptional factor, Ms6564, was characterized in M.
+ smegmatis as a master regulator. A conserved 19 bp-palindromic motif 
+was identified for Ms6564 binding using DNaseI footprinting and EMSA. A 
+total of 339 potential target genes for Ms6564 were further 
+characterized by searching the M. smegmatis genome based on the sequence
+ motif. Notably, Ms6564 bound with the promoters of 37 cell cycle and 
+DNA damage/repair genes and regulated positively their expressions. The 
+Ms6564-overexpressed recombinant strain yielded 5-fold lower mutation 
+rates and mutation frequencies, whereas deletion of Ms6564 resulted in 
+∼5-fold higher mutation rates for the mutant strain compared with the 
+wild-type strain. These findings suggested that Ms6564 may function as a
+ global regulator and might be a sensor necessary for activation of DNA 
+damage/repair genes."
+"Transcriptional regulation plays a critical role during the 
+infection of Mycobacterium tuberculosis, the causative agent of 
+tuberculosis. A two-component system, PhoPR, is clearly involved in the 
+regulation of pathogenic virulence and persistence. However, the 
+regulatory mechanism, as well as the regulator, of the phoPR operon 
+remains uncharacterized in M. tuberculosis and its related species thus 
+far. In the present study, we characterize an ArsR transcriptional 
+factor, corresponding to Rv2034 and Ms6762 in M. tuberculosis and 
+Mycobacterium smegmatis, respectively, as the first regulator of phoP in
+ both mycobacterial species. The interaction between ArsR regulator and 
+target promoters is conserved in these two mycobacterial species, and an
+ inverted repeat sequence motif is successfully mapped out for the 
+recognition of ArsR. Utilizing lacZ reporter genes and overexpression 
+analysis, the ArsR regulator is shown to positively regulate the 
+expression of phoP in M. smegmatis, different from most ArsR family 
+regulators generally as a repressor. The current study establishes a 
+direct link between the ArsR transcriptional factor and the regulation 
+of phoP in mycobacteria. Our findings imply that ArsR may be involved in
+ the pathogenesis of M. tuberculosis through its regulation of the phoPR
+ operon."
+"Clay minerals and metal oxides, as important parts of the soil
+ matrix, play crucial roles in the development of microbial communities.
+ However, the mechanism underlying such a process, particularly on the 
+formation of soil biofilm, remains poorly understood. Here, we 
+investigated the effects of montmorillonite, kaolinite, and goethite on 
+the biofilm formation of the representative soil bacteria Bacillus 
+subtilis. The bacterial biofilm formation in goethite was found to be 
+impaired in the initial 24 h but burst at 48 h in the liquid–air 
+interface. Confocal laser scanning microscopy showed that the biofilm 
+biomass in goethite was 3–16 times that of the control, montmorillonite,
+ and kaolinite at 48 h. Live/Dead staining showed that cells had the 
+highest death rate of 60% after 4 h of contact with goethite, followed 
+by kaolinite and montmorillonite. Atomic force microscopy showed that 
+the interaction between goethite and bacteria may injure bacterial cells
+ by puncturing cell wall, leading to the swarming of bacteria toward the
+ liquid–air interface. Additionally, the expressions of abrB and sinR, 
+key players in regulating the biofilm formation, were upregulated at 
+24 h and downregulated at 48 h in goethite, indicating the initial 
+adaptation of the cells to minerals. A model was proposed to describe 
+the effects of goethite on the biofilm formation. Our findings may 
+facilitate a better understanding of the roles of soil clays in biofilm 
+development and the manipulation of bacterial compositions through 
+controlling the biofilm in soils. The effect of three soil minerals on 
+biofilm production is clarified by research using the common soil 
+bacterium Bacillus subtilis. The mineral composition of soil is known to
+ affect biofilm production, but the mechanisms underpinning minerals’ 
+influences have not been well studied. Peng Cai and colleagues at 
+Huazhong Agricultural University in China, with co-workers in the United
+ States and Singapore, studied Bacillus subtilis growing in the presence
+ of the minerals montmorillonite, kaolinite, and goethite. Their results
+ suggest the minerals, especially goethite, can encourage biofilm 
+formation by promoting the bursting of bacterial cells. The effect of 
+goethite was attributed to the size of its grains being generally 
+smaller than the bacterial cells. By quantifying the effect of these 
+minerals, the research will assist understanding of biofilm formation 
+and the growth and persistence of bacterial populations in soils."
+"The genome of Mycobacterium tuberculosis, the causative agent 
+of tuberculosis, encodes a large number of putative transcriptional 
+regulators. However, the identity and target genes of only a few of them
+ have been clearly identified to date. In a recent study, the ArsR 
+family regulator Rv2034 was characterized as a novel positive regulator 
+of phoP. In the current study, we characterized the auto-repressive 
+capabilities of Rv2034 and identified several residues in the protein 
+critical for its DNA binding activities. We also provide evidence that 
+Rv2034 forms dimers in vitro. Furthermore, by using DNaseI footprinting 
+assays, a palindromic sequence was identified as its binding site. 
+Notably, we found that the dosR promoter region contains the binding 
+motif for Rv2034, and that Rv2034 positively regulates the expression of
+ the dosR gene. The potential roles of Rv2034 in the regulation of lipid
+ metabolism and hypoxic adaptation are discussed."
+"Toxin-antitoxin (TA) systems play significant roles in the 
+regulation of bacterial growth and persistence, and their functions 
+usually depend on protein-protein interaction between their constituent 
+TA proteins. However, the regulatory mechanisms of these systems, 
+particularly their interaction with other cellular components, are still
+ poorly understood. This study investigated cross-talk between the TA 
+module RelJ/K (Rv3357/Rv3358) and the transcriptional regulator 
+staphylococcal iron regulator repressor (SirR, Rv2788) from 
+Mycobacterium tuberculosis. We characterized the physical 
+interaction of SirR with both RelJ and RelK using bacterial two-hybrid, 
+pull-down and co-immunoprecipitation assays. Similarly to RelK, SirR 
+regulates the DNA-binding activity of RelJ and alleviates its inhibitory
+ effect on the activity of the Rv3357p promoter. Furthermore, SirR may 
+replace RelJ to alleviate the inhibitory effect of the toxin RelK on 
+bacterial growth. Conversely, both RelJ and RelK competitively inhibit 
+the interaction between SirR and their respective promoters. Thus, our 
+results show that SirR interacts with a pair of toxin and antitoxin 
+proteins, and exhibits antitoxin-like function to neutralize the toxin. 
+These findings demonstrate a novel function of the SirR regulator of 
+M. tuberculosis as well as a novel mechanism of regulation of TA 
+systems.
+STRUCTURED DIGITAL ABSTRACT: 
+SirR binds to RelJ by pull down (view 
+interaction) SirR binds to RelK by pull down (view interaction) 
+RelJ physically interacts with RelK by anti bait 
+coimmunoprecipitation (1, 2) SirR physically interacts with RelK by
+ anti bait coimmunoprecipitation (view interaction) SirR physically
+ interacts with RelJ by anti bait coimmunoprecipitation (view 
+interaction) RelJ and SirR physically interact by two-hybrid (view 
+interaction) SirR and RelK physically interact by two-hybrid (view 
+interaction) RelK and RelJ physically interact by two-hybrid (view 
+interaction)."
+"Bacterial natural products (NPs) are considered to be a 
+promising source of drug discovery. However, the biosynthesis gene 
+clusters (BGCs) of NP are not often expressed, making it difficult to 
+identify them. Recently, the study of biofilm community showed bacteria 
+may gain competitive advantages by the secretion of antibiotics, 
+implying a possible way to screen antibiotic by evaluating the social 
+behavior of bacteria. In this study, we have described an efficient 
+workflow for novel antibiotic discovery by employing the bacterial 
+social interaction strategy with biofilm cultivation, co-culture, 
+transcriptomic and genomic methods. We showed that a biofilm dominant 
+species, i.e. Pseudomonas sp. G7, which was isolated from cultivated 
+soil biofilm community, was highly competitive in four-species biofilm 
+communities, as the synergistic combinations preferred to exclude this 
+strain while the antagonistic combinations did not. Through the analysis
+ of transcriptomic changes in four-species co-culture and the complete 
+genome of Pseudomonas sp. G7, we finally discovered two novel 
+non-ribosomal polypeptide synthetic (NRPS) BGCs, whose products were 
+predicted to have seven and six amino acid components, respectively. 
+Furthermore, we provide evidence showing that only when Pseudomonas sp. 
+G7 was co-cultivated with at least two or three other bacterial species 
+can these BGC genes be induced, suggesting that the co-culture of the 
+soil biofilm isolates is critical to the discovery of novel antibiotics.
+ As a conclusion, we set a model of applying microbial interaction to 
+the discovery of new antibiotics."
+"Abstract.  The ferric uptake regulator A (FurA) plays an 
+essential role in responding to oxidative stress in mycobacteria. The 
+genome of Mycobacterium smegmatis"
+"Sequence-specific DNA-binding transcription factors have 
+widespread biological significance in the regulation of gene expression.
+ However, in lower prokaryotes and eukaryotic metazoans, it is usually 
+difficult to find transcription regulatory factors that recognize 
+specific target promoters. To address this, we have developed in this 
+study a new bacterial one-hybrid reporter vector system that provides a 
+convenient and rapid strategy to determine the specific interaction 
+between target DNA sequences and their transcription factors. Using this
+ system, we have successfully determined the DNA-binding specificity of 
+the transcription regulator Rv3133c to a previously reported promoter 
+region of the gene Rv2031 in Mycobacterium tuberculosis. In addition, we
+ have tested more than 20 promoter regions of M. tuberculosis genes 
+using this approach to determine if they interact with approximately 150
+ putative regulatory proteins. A variety of transcription factors are 
+found to participate in the regulation of stress response and fatty acid
+ metabolism, both of which comprise the core of in vivo-induced genes 
+when M. tuberculosis invades macrophages. Interestingly, among the many 
+new discovered potential transcription factors, the WhiB-like 
+transcriptional factor WhiB3 was identified for the first time to bind 
+with the promoter sequences of most in vivo-induced genes. Therefore, 
+this study offers important data in the dissection of the transcription 
+regulations in M. tuberculosis, and the strategy should be applicable in
+ the study of DNA-binding factors in a wide range of biological 
+organisms."
+"Bacterial social interaction is a potential influencing factor
+ in determining the fate of invading pathogens in diverse environments. 
+In this study, interactions between two representative resident species 
+(Bacillus subtilis and Pseudomonas putida) and a leading food-borne 
+disease causative pathogen (Vibrio parahaemolyticus) were examined. An 
+antagonistic effect toward V. parahaemolyticus was observed for B. 
+subtilis but not for P. putida. However, the relative richness of the 
+pathogen remained rather high in B. subtilis co-cultures and was, 
+unexpectedly, not sensitive to the initial inoculation ratios. 
+Furthermore, two approaches were found to be efficient at modulating the
+ relative richness of the pathogen. (1) The addition of trace glycerol 
+and manganese to Luria-Bertani medium (LBGM) reduced the richness of V. 
+parahaemolyticus in the co-culture with B. subtilis and in contrast, 
+increased its richness in the co-culture with P. putida, although it did
+ not affect the growth of V. parahaemolyticus by its own. (2) The 
+relative richness of V. parahaemolyticus on semisolid medium decreased 
+significantly as a function of an agar gradient, ranging from 0 to 2%. 
+Furthermore, we explored the molecular basis of bacterial interaction 
+through transcriptomic analysis. In summary, we investigated the 
+interactions between a pathogen invader and two resident bacteria 
+species, showing that the different influences on a pathogen by 
+different types of interactions can be modulated by chemicals and medium
+ fluidity."
+"The CRISPR-Cas (clustered regularly interspaced short 
+palindromic repeats [CRISPR]-CRISPR associated proteins [Cas]) system 
+can provide prokaryote with immunity against invading mobile genetic 
+elements (MGEs) such as phages and plasmids, which are the main sources 
+of staphylococcal accessory genes. To date, only a few Staphylococcus 
+aureus strains containing CRISPR-Cas systems have been identified, but 
+no functional study in these strains has been reported. In this study, 6
+ clinical isolates of S. aureus with type III-A CRISPR-Cas systems were 
+identified, and whole-genome sequencing and functional study were 
+conducted subsequently. Genome sequence analysis revealed a close 
+linkage between the CRISPR-Cas system and the staphylococcal cassette 
+chromosome mec (SCCmec) element in five strains. Comparative sequence 
+analysis showed that the type III-A repeats are conserved within 
+staphylococci, despite of the decreased conservation in trailer-end 
+repeats. Highly homologous sequences of some spacers were identified in 
+staphylococcal MGEs, and partially complementary sequences of spacers 
+were mostly found in the coding strand of lytic regions in 
+staphylococcal phages. Transformation experiments showed that S. aureus 
+type III-A CRISPR-Cas system can specifically prevent plasmid transfer 
+in a transcription-dependent manner. Base paring between crRNA and 
+target sequence, the endoribonuclease, and the Csm complex were proved 
+to be necessary for type III-A CRISPR-Cas immunity."
+"Abstract.  The bacteria drug resistance is not only associated
+ with the gain of drug resistance gene but also relied on the adaptation
+ of bacterial cells to ant"
+"The risk of enteropathogens to food and water is highly 
+dependent on their survival in soil environments. Here, the effects of 
+soil type, particle size, the presence of natural organic matter (NOM) 
+or Fe/Al (hydro)oxides on pathogenic Escherichia coli O157:H7 survival 
+in sterilized soil particles were assessed through survival, attachment,
+ metabolic activity, and qRT-PCR analyses. The abundance of inoculated 
+E. coli O157:H7 in Brown soil (Alfisol) particles increased 0.6–1.4 
+log10 CFU/g within 3 days (except for NOM-stripped clay), while that in 
+Red soil (Ultisol) particles decreased rapidly in 8 days 
+post-inoculation. Additionally, survival of bacteria was significantly 
+enhanced when Fe/Al (hydro)oxides had been removed from Red soil 
+particles. For the two soils, E. coli O157:H7 survived the longest in 
+NOM-present clays and the bacterial adenosine 5′-triphosphate (ATP) 
+levels were 0.7–2.0 times greater in clays than in sands and silts on 
+day 8. Moreover, clays were more effective than silts and sands in 
+binding cells and changing the expressions of acetate pathway-associated
+ genes (pta and ackA). For silts and sands, E. coli O157:H7 decayed more
+ rapidly in the presence of NOM and similar trends of bacterial ATP 
+levels were observed between NOM-stripped and NOM-present soil 
+particles, indicating that the primary role of NOM was not as a nutrient
+ supply. These findings indicate that soil particles function mainly 
+through attachment to change the metabolic pathway of E. coli O157:H7 
+and ultimately impact the survival of bacterial pathogens in soils."
