@@ -1,0 +1,193 @@
+---
+title: "DESeq2 comparison" 
+author: "Chun-Hui Gao"
+date: "2018-11-01"
+---
+运行下列命令可以得到本文中的结果
+`example(results)`
+
+参考资料: https://rpubs.com/ge600/deseq2
+![多因子下的差异表达基因分析](./DESeq2-comparison.jfif)
+
+```{r required library, message=F}
+library(DESeq2)
+library(knitr)
+library(dplyr)
+```
+
+An important point I want to make is the interpretation of results is tricky
+when the study design involve multiple factors. See figure above for an
+example involving 3 genotypes under 3 conditions. Similar to regression
+analysis in R, the reference levels for categorical factors forms the
+foundation of our intereptation.  
+
+**Yet, by default, they are determined alphabetically.**
+
+Before runing DESeq2, it is essential to choose appropriate reference levels
+for each factors. This can be done by the relevel( ) function in R. Reference
+level is the baseline level of a factor that forms the basis of meaningful
+comparisons. In a wildtype vs. mutant experiment, “wild-type” is the
+reference level. In treated vs. untreated, the reference level is obviously
+untreated. More details in Exmple 3.
+
+```{r set_opts, echo=F}
+knitr::opts_chunk$set(fig.width = 6,fig.asp=0.618,message=F,warning = F)
+
+```
+
+
+## 数据
+
+生成一个含有 1000 个基因, 27 个样品的数据集.
+这 27 个样品来自于 3 个基因型(WT, Mutant1, Mutant2),
+3 种处理(CK, Trt1, Trt2), 共分为 $3 * 3 = 9$ 组, 
+每组 3 个重复, 合计 27 个样品.
+
+
+```{r }
+# 1000 x 27 DESeqDataSet
+dds <- makeExampleDESeqDataSet(n = 10000, m=27)
+dim(dds)  # 样本数量
+```
+
+这个 `dds` 默认情况下并没有提供上述分组信息.  
+样品名字是 `r colnames(dds)`,  
+默认的设计是 `r design(dds)`,  
+默认的样本分组信息为:
+
+```{r }
+kable(colData(dds))
+```
+
+设置 基因型(genotype) 和 处理(condition) 之后, 
+再看分组信息, 即是我们真实的分组情况.
+
+```{r }
+dds$condition <- factor(rep(rep(c("Ctrl","Trt1","Trt2"),3), 3))
+dds$genotype <- factor(rep(rep(c("WT","dA","dB"), each=3),3))
+dds$group <- factor(paste(dds$genotype,dds$condition,sep="."))
+# 为了能从样本名称看出样本信息, 修改一下样本名称
+colnames(dds) <- paste0("S",sprintf("%02d",1:27))
+colnames(dds) <- paste(colnames(dds),as.character(dds$genotype),as.character(dds$condition),sep="_")
+kable(colData(dds))
+```
+
+从 `colData()` 重建样本 `sampleTable` 备用.
+
+```{r }
+sample_table <- colData(dds)[1:3] %>% 
+  as.data.frame() %>% 
+  tibble::rownames_to_column(var="sample")
+```
+
+前面已经提过, DESeq2 里面很扯的一点是在选择默认参照系时, 
+按照 字母表顺序 排列的, 而第一个因子则会被选择为参照样本. 
+这对于 `condition` 来说是合理的. 其参照恰好是 "CK". 
+
+```{r }
+dds$condition
+```
+
+但是, 对于 `genotype` 和 `group` 则不合适. 
+例如 `genotype` 的参照为 "dA". 需要调整为 "WT". 
+类似地, `group` 需要调整为 "WT.Ctrl".
+
+我们使用 `relevel()` 命令来完成这一任务. 
+`stats::relevel()` 适合用于很多类似这样的场景: 
+**即第一个因子水平被视为参比对象的时候**. 
+
+
+```{r }
+dds$genotype <- relevel(dds$genotype, "WT")
+dds$genotype
+dds$group <- relevel(dds$group, "WT.Ctrl")
+dds$group
+```
+
+设置实验方案, 运行 `DESeq`:
+
+```{r }
+design(dds) <- ~ genotype + condition + genotype:condition
+dds <- DESeq(dds)
+```
+
+我选择放弃了
+
+```{r }
+resultsNames(dds)
+```
+
+### 我看我短时间内是很难搞懂 多因子交互 分析了....
+
+`results()` 中的 `contrast` 有 3 种不同的标示形式.
+
+- 三元素的字符向量: 第一个是因子, 第二个是分子, 第三个是分母;
+- 含 **两个(或一个)** 字符向量的列表: 比较时, 第一个字符向量中是分子, 第二个是分母; 
+  如果只有一个字符向量, 那第二个会自动设为一个 **空** 字符向量.
+- 一个数字比较向量: 这种情况最不常用. 是为了提取复杂组合下基因表达差异而设的.
+  我们知道 `dds` 中已经包含了所有分组下基因的表达情况, 而 `results` 的作用是将
+  这些差异提取出来. 默认情况下, 只有 若干个 组合的结果会被计算出来, 通过组合这些结果,
+  即拿这些结果进行再来做一次加减乘除, 可以得出任意组合下的差异. 
+
+
+```{r }
+res <- results(dds)
+res <- res[order(res$padj),]  # sort by padj
+top_deg <- rownames(res[1:3,])  # the top four significantly changed genes
+kable(res[1:5,])
+
+counts <- assay(dds) %>%   # matrix
+  as_tibble(rownames=NA) %>%   # to tibble, keep rownames
+  tibble::rownames_to_column(var = "gene") %>%   # rownames is gene
+  gather(-gene,key="sample",value="count") %>%   # gather count of each gene 
+  left_join(sample_table)
+
+barPlotCount <- function(deg, counts=counts, comparison=NULL, ignore.case=TRUE, ...){
+  # 按 gene 绘制 barplot
+  # 
+  # Args:
+  #   deg:        DESeq results (should be less than 6 rows, or will be truncated)
+  #   counts:     the counts of each gene in each sample, plus sample meta information
+  #   comparison: a two elements list of character vector, representing comparison
+  # 
+  # Return:
+  #   ggplot object
+  # 
+  # Example:
+  #   barPlotCount(deg, counts, list("WT_Ctrl","WT_Trt1"))
+  require(ggplot2)
+  require(dplyr)
+  deg <- as.data.frame(deg) %>% tibble::rownames_to_column(var = "gene") %>% head()
+  my_counts <- filter(counts, gene %in% deg$gene) %>% 
+    mutate(color="background") %>%
+    left_join(deg)
+  if (!is.null(comparison)){
+    r1 <- paste(comparison[[1]],sep="|")
+    r2 <- paste(comparison[[2]],sep="|")
+    my_counts$color[grep(r1,my_counts$sample,ignore.case = ignore.case)] <- "reference"
+    my_counts$color[grep(r2,my_counts$sample,ignore.case = ignore.case)] <- "treated"
+  }
+  ggplot(my_counts,aes(sample,count,fill=color,label=log2FoldChange)) + geom_bar(stat = "identity") +
+    scale_fill_manual(values = c("background"="grey","reference"="darkblue","treated"="firebrick")) +
+    facet_wrap(~gene,ncol=1,scales = "free_y") + 
+    geom_text(x=-Inf,y=Inf,vjust=1,hjust=0,check_overlap = T) +
+    theme(axis.text.x = element_text(angle = 30,
+                                     hjust = 1,vjust = 1,
+                                     family = "mono",face = "bold"))
+}
+```
+
+## ~~~ Using a grouping variable ~~~
+
+```{r }
+# This is a useful construction when users just want to compare
+# specific groups which are combinations of variables.
+
+design(dds) <- ~ group
+dds <- DESeq(dds)
+resultsNames(dds)
+
+# the condition effect for genotypeIII
+results(dds, contrast=c("group", "dA.Trt2", "dA.Ctrl"))
+```
+
