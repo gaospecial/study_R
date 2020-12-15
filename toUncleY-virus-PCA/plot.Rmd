@@ -1,0 +1,15 @@
+---
+title: "Y叔的一个问题"
+---
+
+
+```{r}
+library(vegan)
+
+data <- read.delim("influenza.txt",header = T,na.strings = "*")
+rownames(data) <- data[,2]
+data <- data[c(-1,-2)]
+head(data)
+
+vegdist(t(data))
+```
