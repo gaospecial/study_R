@@ -1,0 +1,820 @@
+---
+title: "R Markdown <br/> 一分鐘學一道菜"
+author: "[謝益輝](https://yihui.org)，RStudio"
+date: "2020/10/17 @ [SatRdays Taiwan 2020](https://taiwan2020.satrdays.org)"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    chakra: remark/0.14.1.min.js
+    css: [css/chinese.css]
+    anchor_sections: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      beforeInit: js/macro.js
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE, width = 50)
+```
+
+## 開場白
+
+- 感謝陳姿伃女士的熱情邀請，以及 R-Ladies Taipei 的負責人 Kristen Chan 的細緻安排
+
+- 我從未到過台灣（雖然很有興趣），也從未專門為台灣聽眾做過報告，希望大家能聽得懂和看得懂我的中文
+
+|      |      |       |
+|:----:|:----:|:-----:|
+| 文件 | 檔案 | file |
+| 軟件 | 軟體 | software |
+| 數據 | 資料 | data |
+| 數據挖掘 | 資料採礦 | data mining |
+| 花生 | 土豆 | peanut |
+
+---
+
+- 今天的報告主要基於這本書《R Markdown 廚藝指南》：https://bookdown.org/yihui/rmarkdown-cookbook/
+
+- 幻燈片鏈接在我的簡歷頁中：[yihui.org/cn/vitae/](https://yihui.org)
+
+.center[
+![:image 40%](https://bookdown.org/yihui/rmarkdown-cookbook/images/cover.png)
+]
+
+???
+
+
+---
+
+## 什麼是 R Markdown
+
+```yaml
+---
+title: "一個回歸模型"  #----
+author: "張三"        #    |--> 元數據
+date: "2019-01-02"   #----
+---
+```
+
+````md
+我們來建立一個回歸模型。<!-- 說明文字 -->
+
+`r ''````{r, echo=TRUE}
+fit <- lm(dist ~ speed, data = cars)
+b   <- coef(fit)
+plot(fit)
+`r ''````
+
+
+回歸模型的斜率是 `r '\x60r b[1]\x60'`。<!-- 行內代碼 -->
+````
+
+???
+
+先簡略介紹一下什麼是 R Markdown，好讓你們決定是繼續聽下去，還是低頭玩手機。
+
+---
+
+## R Markdown -> Markdown
+
+```yaml
+---
+title: "一個回歸模型"  #----
+author: "張三"        #    |--> 元數據
+date: "2019-01-02"   #----
+---
+```
+
+````md
+我們來建立一個回歸模型。<!-- 說明文字 -->
+
+`r ''````r
+fit <- lm(dist ~ speed, data = cars)
+b   <- coef(fit)
+plot(fit)
+`r ''````
+
+![圖片](input_files/figure-html/chunk-1.png)
+
+回歸模型的斜率是 -17.58。<!-- 行內代碼 -->
+````
+
+---
+
+## 術語
+
+- 元數據（metadata）
+
+- 代碼段（code chunk）
+
+    - 代碼段選項（chunk options）
+
+- 行內代碼（inline code）
+
+---
+
+## 基本原理
+
+![R Markdown 編譯流程](https://bookdown.org/yihui/rmarkdown-cookbook/images/workflow.png)
+
+---
+
+## 為什麼用 R Markdown
+
+可重複性研究（Reproducible Research）
+
+謹記：R Markdown 並**不能保證**研究結果可重複，它最多只能減少一些低級的手工複製粘貼錯誤，因為結果都不需要複製粘貼，而是自動生成的。影響可重複性的因素太多了，計算只是其中一部分。
+
+---
+
+## 為什麼用 R Markdown
+
+今年年初我的一個報告（同一份 R Markdown 檔案，十四種輸出格式）：https://rstudio.com/resources/rstudioconf-2020/one-r-markdown-document-fourteen-demos/
+
+越簡單的源檔案格式，普適性就越強。
+
+如 Markdown 可以轉換輸出若幹種不同檔案格式（以犧牲部分排版功能為代價），而 LaTeX 的強項是高質量的 PDF，生成其它檔案格式則相對較難。
+
+沒有絕對正確的工具，任何工具都存在取舍問題。每個人的損失函數都不同，所以不要輕信工具的宣傳（包括我的）。
+
+---
+
+## 1. Markdown 編輯器
+
+世上 [Markdown 的轉換工具有無數種](https://yihui.org/cn/2017/08/markdown-flavors/)，而良心轉換工具有且僅有一款，即 Pandoc。它最在乎標準，語法覆蓋面也最廣。
+
+基於 Pandoc 的 Markdown 標準的良心可視化編輯器只有兩款：Typora 及我們廠剛推出的 RStudio 可視化編輯器。我書中有簡略介紹：https://bookdown.org/yihui/rmarkdown-cookbook/rstudio-visual.html
+
+---
+background-image: url(https://db.yihui.org/imgur/CwBsAqs.png)
+background-size: contain
+background-position: center top
+class: bottom, center
+
+## 太強啦
+
+???
+
+截圖來自《十全九美》。
+
+---
+
+## 2. 實時編譯和預覽 R Markdown
+
+沒裝寫輪眼（xaringan）的裝一下先：
+
+```{r, eval=FALSE}
+xfun::pkg_load2('xaringan')
+```
+
+調用函數 `xaringan::inf_mr()` 或者 RStudio 插件 “Infinite Moon Reader” 皆可開啟實時預覽：只需要保存當前的 Rmd 文件，寫輪眼會自動重新編譯它並刷新結果。
+
+對寫輪眼幻燈片來說，[究極無限月讀](https://yihui.org/en/2019/02/ultimate-inf-mr/)更是可以讓你一邊打字一邊預覽。再也不用猛擊 Knit 按鈕了！
+
+.footnote[注意：只支持 HTML 輸出格式（因為背後涉及到 JavaScript 技術）。]
+
+???
+
+沒看過火影忍者的人可能會對這個 R 包中的各種術語感到莫名其妙。我已經被問得開始懷疑人生。
+
+演示一下普通 HTML 檔案和寫輪眼幻燈片。
+
+---
+
+## 3. [把一系列 R 圖片拼接為 GIF 動畫](https://yihui.org/en/2018/08/gifski-knitr/)
+
+安裝 **gifski** 包：
+
+```{r, eval=FALSE}
+xfun::pkg_load2('gifski')
+```
+
+再用代碼段選項 `animation.hook='gifski'`，如:
+
+````md
+```{r, animation.hook='gifski'}`r ''`
+for (i in 1:2) {
+  pie(c(i %% 2, 6), col = c('red', 'yellow'),
+    labels = NA)
+}
+```
+````
+
+---
+
+.center[![Pacman](https://user-images.githubusercontent.com/163582/44246516-30c93000-a1a4-11e8-8aa5-8876e51a227f.gif)]
+
+.footnote[通常不建議使用餅圖，除了制作上面的吃豆人。]
+
+---
+class: inverse
+
+## 示例
+
+https://github.com/rstudio-conf-2020/rmarkdown-dashboard/blob/master/materials/exercises/06-Recipes/01-animation.Rmd
+
+???
+
+interval 調整動畫幀與幀之間的時間間隔。
+
+---
+
+## 4. 麻麻再也不用擔心我的 LaTeX 裝不上或缺包了
+
+.center[![TinyTeX 圖標](https://yihui.org/images/logo-tinytex.png)]
+
+---
+
+- LaTeX 用戶的痛苦你造嗎？https://yihui.org/tinytex/pain/
+
+- 通行的 LaTeX 发行版通常都超級占存儲空間：TeX Live、MiKTeX、MacTeX (~5Gb)。TinyTeX ([yihui.org/tinytex](https://yihui.org/tinytex)) 一百多兆。一行代碼安裝：
+    ```r
+    tinytex::install_tinytex()
+    ```
+
+- `tinytex::latexmk()` 幫你搞定常見的 LaTeX 錯誤和問題。
+
+    1. 自動安裝缺失的包。
+    2. 多次編譯檔案：你知道為什麽要重覆跑 `pdflatex + bibtex + makeidx + pdflatex + pdflatex` 嗎？
+
+???
+
+你到底是個天天折騰軟件問題的碼農，還是個排版工人？
+
+有用戶告訴我，要不是為了安裝 TinyTeX 而卸載其它 LaTeX 发行版，他都不知道過去幾年他的 LaTeX 已經占了 20G 硬盤。
+
+---
+class: center
+
+![:image 75%, 如何畫一個貓頭鷹](gif/draw-an-owl.jpg)
+
+???
+
+創建個 PDF，中間步驟卻一大堆。
+
+---
+
+class: center
+
+![:image 75%, 如何創建 PDF](https://user-images.githubusercontent.com/163582/68422075-18f11980-0165-11ea-8589-24e168a3f246.jpg)
+
+???
+
+TinyTeX 自動化一切可自動化的步驟。
+
+---
+
+如果你就是不聽不聽，非不安裝 TinyTeX，那麼遇到缺包的情況時，也有解藥：https://github.com/yihui/latex-pass
+
+把你的錯誤日誌（.log）或者 .tex 檔案傳過去，它就會告訴你應該安裝哪些包。
+
+---
+
+## 5. CSS 與 JavaScript：從入門到上癮
+
+關於網頁三件套 HTML、CSS、JavaScript 的簡略介紹：https://bookdown.org/yihui/blogdown/website-basics.html
+
+瀏覽器自帶的開发者工具（Developer Tools）
+
+現場演示：https://taiwan2020.satrdays.org
+
+???
+
+開发者工具絕對是讓你相見恨晚的神器！學了這一招之後，你晚上回家躲在被窩里大笑出來。
+
+你可以用它修改網頁上的任何東西，包括你的銀行存款余額（雖然改了也沒用）。
+
+R Markdown 檔案中如何插入 CSS 和 JS 代碼。
+
+---
+
+示例：向 R Markdown 中嵌入 CSS 和 JavaScript 代碼
+
+````md
+```{css, echo=FALSE}`r ''`
+p {
+  font-size: 36px;
+}
+```
+
+```{js, echo=FALSE}`r ''`
+$('table').addClass('table-striped');
+```
+````
+
+---
+
+## 6. 誰說網頁不能用來排版？
+
+如果你在這個看臉的時代也迷信 PDF 的高質量，要知道其實任何網頁都可以打印成 PDF。例如用 Chrome 或 Firefox 瀏覽器。
+
+或使用 [**pagedown**](https://github.com/rstudio/pagedown) 包調用 R 函數和 Chrome 打印 PDF。
+
+.center[
+![pagedown](https://user-images.githubusercontent.com/163582/51942716-66be4180-23dd-11e9-8dbc-fdb4f465d1c2.png)
+]
+
+---
+class: inverse
+
+## 示例
+
+https://github.com/rstudio-conf-2020/rmarkdown-dashboard/blob/master/materials/exercises/06-Recipes/03-chrome.Rmd
+
+無論是本地 HTML 文件，還是在線的網頁，全部都能打：
+
+```r
+pagedown::chrome_print('03-chrome.Rmd')
+pagedown::chrome_print('03-chrome.html')
+pagedown::chrome_print('https://pagedown.rbind.io/html-letter')
+```
+
+除了打印 PDF，[**pagedown**](https://github.com/rstudio/pagedown) 也提供了很多種網頁樣式，包括海報、簡歷、名片、書籍、論文、信函等。這些在[我去年的報告](https://rstudio.com/resources/rstudioconf-2019/pagedown-creating-beautiful-pdfs-with-r-markdown-and-css/)中有簡略介紹。
+
+---
+
+## 7. 圖表章節交叉引用
+
+1. 用 **bookdown** 包里的輸出格式，如：
+
+    ```yaml
+    output:
+      - bookdown::html_document2
+      - bookdown::pdf_document2
+      - bookdown::word_document2
+    ```
+
+2. 保證被引用的對象有個標識符（ID）；
+
+3. 引用的語法 `\@ref(ID)`。
+
+章節、圖、表、公式，皆可交叉引用。
+
+---
+class: inverse
+
+## 示例
+
+````
+# 引言 {#intro}
+
+介紹文字。
+
+```{r, cool, fig.cap="一幅超厲害的圖！"}`r ''`
+plot(cars)
+```
+
+參見第 \@ref(intro) 節和圖 \@ref(fig:cool)。
+````
+
+https://github.com/rstudio-conf-2020/rmarkdown-dashboard/blob/master/materials/exercises/06-Recipes/07-cross-reference.Rmd
+
+---
+
+元素的編號和交叉引用都應該動態生成，而不要寫死數字，因為你不知道你將來會不會把“圖 3” 改成“圖 4”。
+
+.center[![Kicking the wrong ball](gif/kick-head.gif)]
+
+---
+
+## 8. 如何對付 PDF 中的超寬文本
+
+![PDF 中超寬的文本](https://bookdown.org/yihui/rmarkdown-cookbook/images/wrap-none.png)
+
+???
+
+我想多數用 R Markdown 編過 PDF 的人應該都遇到過這個問題，也就是如何把一行文本掰彎。
+
+---
+
+三種可能的超寬情形：
+
+1. 源代碼超寬：你可以嘗試自行手工折行、調整。
+
+1. 文本輸出超寬：先試試 `options(width = N)` 是否管用，N 是一行文本的寬度，可以試小一點的數值如 40。
+
+1. 若都不管用，只能上 LaTeX 的 **listings** 包了。
+
+---
+
+```yaml
+---
+output:
+  pdf_document:
+    pandoc_args: --listings
+    includes:
+      in_header: listings-settings.tex
+---
+```
+
+`listings-settings.tex` 文件的內容：
+
+```tex
+\lstset{
+  breaklines=true,
+  basicstyle=\ttfamily
+}
+```
+
+詳見：https://bookdown.org/yihui/rmarkdown-cookbook/text-width.html
+
+---
+
+## 9. 計算太耗時？上緩存
+
+設置代碼段選項 `cache = TRUE`。一次運行之後，如果下次不對代碼作修改，那麽下次運行會加載緩存而跳過真正的計算；如果有改動，那麽緩存將會被清空、導致重新跑代碼。
+
+示例：https://github.com/rstudio-conf-2020/rmarkdown-dashboard/blob/master/materials/exercises/06-Recipes/01-animation.Rmd
+
+
+---
+
+天下沒有免費的午餐。緩存能節省計算的時間，但[也可能耗費你學習它的時間。](https://yihui.org/en/2018/06/cache-invalidation/)
+
+.center[![如何減掉 10kg](images/lose-weight.jpg)]
+
+---
+
+我個人對當初 `cache = TRUE` 的設計越來越不滿意（沒錯，這是本人的設計），現在我推薦使用 `xfun::cache_rds()` 緩存，它相對穩定一些，學習起來應該也容易一些。
+
+```r
+res <- xfun::cache_rds({
+  Sys.sleep(3)  # 假裝很慢
+  1:10
+})
+```
+
+詳見：https://bookdown.org/yihui/rmarkdown-cookbook/cache-rds.html
+
+---
+
+## 10. 使用 Python 及其它語言
+
+- Python、Julia、SQL、C++、Shell 腳本、JavaScript、CSS，等等都可以
+
+- **knitr** 支持四十多種語言（當然，多數語言的“支持”力度並不強，所以不要抱太高期望）
+
+    ```r
+    names(knitr::knit_engines$get())
+    ```
+
+- 要用別的語言的話，把 r 換成別的名字就好了（所有可用名參見上一行代碼），如：
+    ````md
+    ```{python}`r ''`
+    x = 42
+    ```
+    ````
+
+---
+class: inverse
+
+## 示例
+
+https://github.com/rstudio-conf-2020/rmarkdown-dashboard/blob/master/materials/exercises/06-Recipes/14-lang.Rmd
+
+---
+
+隨便你什麽語言，盡管一個個放馬過來。
+
+.center[![:image 70%, 六六六](gif/duiyou-3.gif)]
+
+---
+
+## 11. 令人頭疼的路徑問題
+
+所有的相對路徑（relative path）都是相對於工作目錄（working directory）.
+
+理解工作目錄：https://bookdown.org/yihui/rmarkdown-cookbook/working-directory.html
+
+如果這問題實在讓你昏了頭，那麼不妨試試：
+
+```r
+xfun::magic_path()
+```
+
+只需要丟給它一個檔案名，它會自動幫你搜索到這個檔案，不管它在哪個子目錄下。
+
+---
+
+## 12. R Markdown 檔案導出 R 代碼
+
+```r
+knitr::purl("test.Rmd")  # 輸出 test.R
+```
+
+https://bookdown.org/yihui/rmarkdown-cookbook/purl.html
+
+---
+
+## 13. 反過來，從 test.R 到 test.Rmd
+
+```r
+knitr::spin("test.R")
+```
+
+或者在 RStudio 裡直接編譯（Ctrl + Shift + K）。
+
+```r
+#' ---
+#' title: "從 R 代碼腳本直接生成報告"
+#' ---
+#'
+#' 依舊可以加上一些代碼段選項。
+
+#+ echo=FALSE, fig.width=7
+plot(cars)
+```
+
+https://bookdown.org/yihui/rmarkdown-cookbook/spin.html
+
+---
+
+## 14. 在元數據中使用行內代碼
+
+例如：自動更新日期
+
+```yaml
+---
+date: "`r knitr::inline_expr("Sys.Date()")`"
+---
+```
+
+或者用 `format()` 函數講時間格式化：
+
+```yaml
+---
+date: "`r knitr::inline_expr('format(Sys.time(), "%Y 年 %m 月 %d 日")')`"
+---
+```
+
+https://bookdown.org/yihui/rmarkdown-cookbook/update-date.html
+
+---
+
+## 15. `knitr::combine_words()`
+
+拼接一串字符向量，如：
+
+```{r, collapse=TRUE}
+x = c('張三', '李四', '王二麻子')
+knitr::combine_words(x)
+knitr::combine_words(x, sep = '、', and = '以及')
+knitr::combine_words(x, sep = '、', and = '')
+```
+
+示例：
+
+```md
+那天一起打牌的人有 `r knitr::inline_expr('knitr::combine_words(x)')`。
+```
+
+---
+
+## 16. 模型轉換為公式
+
+https://bookdown.org/yihui/rmarkdown-cookbook/equatiomatic.html
+
+```r
+fit <- lm(mpg ~ cyl + disp, mtcars)
+# 將 lm() 模型轉換為數學公式
+equatiomatic::extract_eq(fit)
+```
+
+$$\operatorname{mpg} = \alpha + \beta_{1}(\operatorname{cyl}) + \beta_{2}(\operatorname{disp}) + \epsilon$$
+
+---
+
+## 17. 使用額外的 LaTeX 宏包
+
+LaTeX 用戶知道可以在導言區（preamble）調更多的包，如
+
+```latex
+\usepackage{animate}
+```
+
+那麼 R Markdown 中如何實現呢？
+
+```yaml
+---
+title: "LaTeX 宏包在手，天下我有"
+output: 
+  pdf_document:
+    extra_dependencies: ["bbm", "threeparttable"]
+---
+```
+
+https://bookdown.org/yihui/rmarkdown-cookbook/latex-extra.html
+
+---
+
+## 18. 向 LaTeX 導言區添加任意代碼
+
+```tex
+\documentclass{article}
+% 這裡就是導言區
+\begin{document}
+% 正文
+\end{document}
+```
+
+答案：
+
+```yaml
+---
+output:
+  pdf_document:
+    includes:
+      in_header: "preamble.tex"
+---
+```
+
+https://bookdown.org/yihui/rmarkdown-cookbook/latex-preamble.html
+
+---
+
+## 19. 我是 LaTeX 死忠粉，我一定要用 LaTeX，我不喜歡 Markdown
+
+沒問題啊。我很欣賞這麼硬核的用戶。用 `.Rnw` 檔案好啦：
+
+```tex
+\documentclass{article}
+\begin{document}
+
+想寫啥寫啥。
+
+<<foo, fig.height=4>>=
+1 + 1  # R 代碼在此
+plot(rnorm(100))  # 畫圖當然也可以
+@
+\end{document}
+```
+
+https://bookdown.org/yihui/rmarkdown-cookbook/latex-hardcore.html
+
+---
+
+## 20. 同樓上，我系 HTML 死忠，我定要用 HTML，我不喜歡 Markdown
+
+有骨氣！來來來，寫 `.Rhtml` 檔案好啦：
+
+```html
+<html>
+<head><title>標題</title></head>
+<body>
+  <p>這樣子寫一個段落，只要你不覺得累。</p>
+
+<!--begin.rcode
+    # 代碼寫在注釋裡
+    1 + 1
+    rnorm(5)
+    end.rcode-->
+```
+
+https://bookdown.org/yihui/rmarkdown-cookbook/html-hardcore.html
+
+---
+
+## 21. 在 HTML 頁面中嵌入供人下載的任意檔案
+
+有時候你可能希望讀者能從頁面上下載一些資料，而又懶得把它們放在單獨的檔案中，能用一個網頁搞定嗎？
+
+用 `xfun::embed_file()` 即可。注意 R Markdown 的輸出格式必須是 HTML 才行，否則無意義。
+
+````md
+```{r, echo=FALSE}`r ''`
+xfun::embed_file("source.Rmd", "敬請欣賞 Rmd 源")
+```
+````
+
+https://bookdown.org/yihui/rmarkdown-cookbook/embed-file.html
+
+---
+
+## 22. 一段代碼生成不同格式的圖片
+
+將你需要的格式傳給 `dev` 選項即可， 如：
+
+```yaml
+---
+title: "期刊編輯為什麼逼我提交 tiff 格式圖片，嗚嗚嗚"
+subtitle: "pdf 和 svg 到底有什麼錯"
+output:
+  word_document:
+    keep_md: true
+---
+```
+
+````md
+```{r, dev=c('png', 'pdf', 'svg', 'tiff')}`r ''`
+plot(cars)
+```
+````
+
+https://bookdown.org/yihui/rmarkdown-cookbook/dev-vector.html
+
+---
+
+## 23. 重複使用一段代碼
+
+一段代碼可以有多種方式重複使用，這裡只介紹最簡單的一種，即：使用 `ref.label` 選項
+
+````md
+```{r, chunk-one, eval=FALSE}`r ''`
+1 + 1
+2 + 2
+```
+
+上面的代碼沒有真的被執行，下面我要動真格的啦。
+
+```{r, ref.label="chunk-one", eval=TRUE}`r ''`
+```
+````
+
+更多辦法：https://bookdown.org/yihui/rmarkdown-cookbook/reuse-chunks.html
+
+---
+
+## 24. 條件輸出文本
+
+將代碼段中的 `r` 替換為 `asis`，即可在代碼段中寫任意文本，配合 `echo` 選項，即可控制這段文本是否要輸出，例：
+
+````md
+```{r}`r ''`
+getRandomNumber <- function() {
+  sample(1:6, 1)
+}
+```
+
+```{asis, echo = getRandomNumber() == 4}`r ''`
+根據 https://xkcd.com/221/ 所說的，
+我們剛剛得到了一個真正的隨機數。
+```
+````
+
+https://bookdown.org/yihui/rmarkdown-cookbook/eng-asis.html
+
+---
+
+## 25. 用 R Markdown 寫書！
+
+用 bookdown 包：https://bookdown.org/yihui/bookdown
+
+更多示例：https://bookdown.org
+
+---
+
+## 26. 用 R Markdown 建網站！！
+
+用 blogdown 包：https://bookdown.org/yihui/blogdown
+
+快速演示一下。
+
+---
+
+## 27. 用 R Markdown 做飯！！！
+
+--
+
+## 28. 用 R Markdown 上天！！！
+
+--
+
+## 29. 用 R Markdown 發財！！！
+
+---
+class: inverse, middle, center
+
+## 不可能啦，
+
+--
+
+## 你可以考慮用 R Markdown
+
+--
+
+# 做夢！！！
+
+---
+class: inverse
+
+## R Markdown 還可以這樣玩
+
+R Markdown + Shiny 人臉識別: https://yihui.shinyapps.io/face-pi/
+
+源代碼：https://github.com/yihui/shiny-apps/tree/master/face-pi
+
+.center[![:image 20%, 狗臉](gif/dog-wat.gif)]
+
+
+---
+class: center, middle
+
+# 謝謝！
+
+今天幻燈片的網址在我簡歷頁中的報告列表里（因為太長，我就不打在屏幕上了）：
+
+https://yihui.org/cn/vitae/
+
+若有問題，可以考慮到論壇 https://d.cosx.org 提問（抱歉，我通常無法處理電子郵件中的提問）。

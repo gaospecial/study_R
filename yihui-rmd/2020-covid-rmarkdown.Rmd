@@ -1,0 +1,286 @@
+---
+title: "Literate Programming, R Markdown, and Reproducible Research"
+author: "[Yihui Xie](https://yihui.org), RStudio"
+date: "2020/08/28 @ [Data Science Conference on COVID-19](https://sites.google.com/view/dscc-19/agenda)"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    chakra: remark/0.14.1.min.js
+    css: [default, css/0927.css]
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      beforeInit: js/macro.js
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE, width = 50)
+```
+
+class: center middle
+
+# Slides: [bit.ly/covid-down](https://bit.ly/covid-down)
+
+---
+
+## ~~Open data,~~ Open Code, and Reproducible Research
+
+- I can't talk much on open data
+
+--
+
+- I'm a software engineer, and all for open code: https://github.com/yihui
+
+--
+
+- I created an R package called **knitr** in 2012 to make it easier for myself to do my homework assignments when I was a PhD student at Iowa State University
+
+- And **knitr** happened to have something to do with "reproducible research"
+
+- When **knitr** was combined with Markdown, R Markdown was born, and became popular
+
+--
+
+- I think that's why I'm here today
+
+---
+
+# A minimal R Markdown document
+
+```yaml
+---
+title: "A Simple Regression"  #----
+author: "Yihui Xie"           #    |
+date: "2019-01-02"            #    |
+output:                       #    |--> metadata
+  html_document:              #    |
+    toc: true                 #----
+---
+```
+
+````md
+We built a linear regression model.  <!-- narrative -->
+
+`r ''````{r}
+fit <- lm(dist ~ speed, data = cars)
+b   <- coef(fit)
+plot(fit)
+`r ''````
+
+
+
+The slope of the regression is `r '\x60r b[1]\x60'`.  <!-- narrative w/ code -->
+````
+
+---
+
+# Knit R Markdown to Markdown
+
+```yaml
+---
+title: "A Simple Regression"  #----
+author: "Yihui Xie"           #    |
+date: "2019-01-02"            #    |
+output:                       #    |--> metadata
+  html_document:              #    |
+    toc: true                 #----
+---
+```
+
+````md
+We built a linear regression model.  <!-- narrative -->
+
+```r
+fit <- lm(dist ~ speed, data = cars)
+b   <- coef(fit)
+plot(fit)
+```
+
+![a plot](input_files/figure-html/unnamed-chunk-1.png)
+
+The slope of the regression is -17.58.  <!-- narrative w/ code -->
+````
+
+---
+class: center
+
+![How Rmd is converted through knitr and Pandoc](https://bookdown.org/yihui/rmarkdown-cookbook/images/workflow.png)
+
+R Markdown = knitr (Literate Programming)
+
+\+ Pandoc
+
+(+ LaTeX for PDF output)
+
+---
+background-image: url(https://pbs.twimg.com/media/DwKpN8RUcAAcqwm.jpg)
+background-size: contain
+class: top right
+
+<https://github.com/allisonhorst/stats-illustrations>
+
+---
+class: inverse center middle
+
+## Using R Markdown
+
+### only implies that reports _might be_
+
+# _computationally_
+
+# reproducible
+
+.left[.footnote[There are several levels of reproducibility.]]
+
+---
+
+## Simplicity and flexibility
+
+- Markdown is a simple language that supports common document elements such as section headers, paragraphs, lists, tables, quotes, code blocks, figures, citations, math equations, etc.
+
+    - If you cannot learn the basics of Markdown in 5 minutes, I'll give you 20 dollars (no one has claimed the $20 so far).
+
+- Output formats: HTML, LaTeX/PDF, Word, PowerPoint, Beamer, HTML slides, E-books, ...
+
+- Types of applications: reports, papers, books, websites, presentations, resumes, dashboards, interactive tutorials, ... Two examples:
+
+    - About a million R Markdown reports published to https://rpubs.com
+    
+    - About 670 books<sup>*</sup> written in R Markdown: https://bookdown.org
+
+.footnote[[*] Not all of them are actually "books". Some may be personal notes or lecture notes.]
+
+---
+class: center
+
+[![:image 25%, R Markdown definitive guide](https://camo.githubusercontent.com/29b7f245715700a756c3381c146cf05f6d28350e/687474703a2f2f692e696d6775722e636f6d2f795977343661462e6a7067)](https://bookdown.org/yihui/rmarkdown)
+[![:image 24.4%, R Markdown definitive guide](https://bookdown.org/yihui/bookdown/images/cover.jpg)](https://bookdown.org/yihui/bookdown)
+[![:image 25.6%, R Markdown definitive guide](https://bookdown.org/yihui/blogdown/images/cover.png)](https://bookdown.org/yihui/blogdown)
+[![:image 30%, R Markdown definitive guide](https://bookdown.org/yihui/rmarkdown/images/cover.png)](https://bookdown.org/yihui/rmarkdown)
+[![:image 30.2%, R Markdown definitive guide](https://bookdown.org/yihui/rmarkdown-cookbook/images/cover.png)](https://bookdown.org/yihui/rmarkdown-cookbook)
+
+---
+
+````md
+```{r, animation.hook='gifski'}`r ''`
+for (i in 1:2) {
+  pie(c(i %% 2, 6), col = c('red', 'yellow'), labels = NA)
+}
+```
+````
+
+--
+
+.center[![:image 70%, Pacman](https://user-images.githubusercontent.com/163582/44246516-30c93000-a1a4-11e8-8aa5-8876e51a227f.gif)]
+
+Creating a Pacman---one of the very few legitimate use cases of pie charts!
+
+---
+
+## R Markdown is not only for R
+
+- Python, Julia, SQL, C++, shell scripts, JavaScript, CSS, ...
+
+- To know all languages supported in **knitr** (there are more than 40):
+```r
+names(knitr::knit_engines$get())
+```
+
+- Change the engine name from `r` to the one you want to use, e.g.,
+    ````md
+    ```{python}`r ''`
+    x = 42
+    ```
+    ````
+
+---
+class: inverse
+
+## More fun with R Markdown
+
+Face detection with R Markdown + Shiny: https://yihui.shinyapps.io/face-pi/
+
+Source code: https://github.com/yihui/shiny-apps/tree/master/face-pi
+
+.center[![:image 20%, Dog face](gif/dog-wat.gif)]
+
+---
+class: center, middle
+
+## R Markdown: https://rmarkdown.rstudio.com
+
+## About me: https://yihui.org
+
+.left[
+Disclaimer: This is the first time that I have participated in a panel discussion in my life. I consider myself an extremely slow thinker and bad at answering real-time questions. Please don't take my words for granted here. If I come up with better answers to your questions, I may write a blog post on my personal website later (see address above).
+]
+
+---
+class: inverse center middle
+
+# Questions
+
+---
+
+## Difference between academic and software standards
+
+[Victoria Stodden](https://youtu.be/chDerBEcLXA?t=679) made a claim that "Virtually all published discoveries today have a computation component" and then goes on to say that "there is a mismatch between traditional scientific dissemination practices and modern computation research process, leading to reproducibility concerns." We currently live in a time where any change to a code base can be recorded using Git, all logic can be documented with RMarkdown or Jupyter Notebooks, and entire environments can be reproduced by using Docker containers. Current software practices seem to be a perfect for reproducibility, but are academic publications and institutions utilizing this? Is there indeed a concerning mismatch between the scientific community and the computational community? If so, how can we change this?
+
+---
+
+I'm aware of at least two journals: _Journal of Statistical Software_ (JSS), and _Biostatistics_. I know some JSS papers were written in `.Rnw` documents and compiled through **knitr** (or Sweave for some older papers). In recent years, JSS also started to accept papers written in R Markdown.
+
+When I was young and naive, I had some ideas on creating a reproducible journal, which [I wrote down in a blog post](https://yihui.org/en/2012/03/a-really-fast-statistics-journal/) in 2012. After I became older and still naive, I realized that running a journal was not as easy as I imagined, but I'm still interested in doing this. I just don't know when I may have the time.
+
+---
+
+Roger D. Peng, Reproducible research and _Biostatistics_, _Biostatistics_, Volume 10, Issue 3, July 2009, Pages 405–408, https://doi.org/10.1093/biostatistics/kxp014
+
+> [...] The Associate Editor for reproducibility (AER) will handle submissions of reproducible articles. [...] The AER will consider three different criteria when evaluating the reproducibility of an article.
+
+> - Data: The analytic data from which the principal results were derived are made available on the journal's Web site. The authors are responsible for ensuring that necessary permissions are obtained before the data are distributed.
+
+> - Code: Any computer code, software, or other computer instructions that were used to compute published results are provided. For software that is widely available from central repositories (e.g. CRAN, Statlib), a reference to where they can be obtained will suffice.
+
+> - Reproducible: An article is designated as reproducible if the AER succeeds in executing the code on the data provided and produces results matching those that the authors claim are reproducible. In reproducing these results, reasonable bounds for numerical tolerance will be considered.
+
+---
+
+For the question "how can we change this [mismatch between the scientific community and the computational community]":
+
+1. I feel that most students in stats departments are comfortable with using tools like R Markdown to write reports or their homework assignments. I just wish more professors could encourage their students to embrace modern technologies for reproducible research, even if those professors don't use these tools by themselves. I recommend that you watch the talk ["R for Graphical Clinical Trial Reporting"](https://rstudio.com/resources/rstudioconf-2020/r-for-graphical-clinical-trial-reporting/) by Prof Frank Harrell. If all professors are as open-minded as Prof Harrell, we will embracing reproducibility much faster.
+
+    I have heard an extreme example earlier this year, but I'm not going to write it down in the slides here.
+
+1. I mentioned JSS and Biostatistics before. Actually _The R Journal_ also accepts R Markdown after it is converted to LaTeX, which is possible via the R package **rticles**.
+
+    I don't mean to self-promote too much here, but the **rticles** package is also our effort to getting more people in academia to write journal papers and articles in R Markdown: https://github.com/rstudio/rticles
+
+---
+
+## Different interpretations of acceptable documentation
+
+It won't be a contentious statement to say that, for the sake of science and reproducibility, more documentation is better than less documentation.  However, even if researchers take meticulous notes during the course of their research, most of the information stored in those notes will never make it to publication. Many fields provide guidelines on how to effectively and efficiently report on study design, data acquisition, and model creation. But, these guidelines are often interpreted differently by different researchers. Are there any rules of thumbs that researchers can use to provide sufficient documentation without dumping the entire log book?
+
+---
+
+I can only talk from the perspective of computing. For computing, ideally you shouldn't need any guidelines for other people to reproduce your results, because you'd want to automate the computing as much as possible. As I wrote in my blog post ["Ideally, I Hope to Simply Copy and Run Your Example"](https://yihui.org/en/2018/06/copy-and-run/):
+
+> Words can be ambiguous. Code is precise.
+
+However, that's only the ideal case. Practically, it's impossible to automate everything even in computing. There are tools to overcome this problem, such as Docker, but there is always resistance when you ask people to install "yet another tool" (to be honest, evan I don't use Docker).
+
+Another solution is to do the computing on the cloud, so users don't need to install anything locally after you prepare the computing environment for them. For example, you may use Binder (https://mybinder.org) or RStudio Cloud (https://rstudio.cloud).
+
+---
+
+## Data versioning
+
+Often, data is dynamic and changes. By storing a study's data in a database, researchers provide a snapshot of what that data looked like at a particular point in time. What should researchers consider when making this data available to others? What about situations where the researcher does not have the appropriate infrastructure to store data publicly?
+
+---
+
+I'm sure other panelists will mention privacy as one factor to consider when sharing the data. Another thing that I can think of is to try to document the data clearly. For example, if the data is dynamically scraped from a certain source, you need to mention the time when it was fetched.
+
+Regarding the infrastructure to store data publicly, I believe there are many free services, such as Github (https://github.com) or Mendeley Data (https://www.mendeley.com/datasets). I guess most services probably won't allow you to share huge data files.

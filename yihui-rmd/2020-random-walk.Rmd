@@ -1,0 +1,640 @@
+---
+title: "随机漫步十八年的傻瓜"
+author: "[谢益辉](https://yihui.org)"
+date: "2020/12/11 @ 中国人民大学统计学院"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    chakra: remark/0.14.1.min.js
+    css: [css/chinese.css]
+    anchor_sections: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      beforeInit: js/macro.js
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE, width = 50)
+```
+
+## 我是数据科学家我家里人知道吗？
+
+[![谢益辉维基百科条目](https://user-images.githubusercontent.com/163582/101722755-865e3080-3a70-11eb-8d33-d4506422cbd5.png)](https://en.wikipedia.org/wiki/Yihui_Xie)
+
+???
+
+什么叫出名？就是你看到别人谈论你的时候，你感觉并不认识那个人。
+
+---
+class: middle
+
+### 我是数据科学家？不管你们信不信，反正我是不信的。我只是个码农而已，顶多是我写的代码有数据科学家在用。尽管我是统计专业毕业，我觉得我连统计学家都不够格。
+
+坦白讲，我既不喜欢推公式定理，也不太喜欢玩数据。所以前方低能预警：这场数据科学报告没什么靠谱的数据，也不那么科学。
+
+???
+
+这场报告你们是想继续听呢，还是想继续听呢，还是想继续听，请你们随意。
+
+统计里面有双盲试验，这场报告可能也是双盲报告：我不知道我在讲什么鬼，你们也一脸懵圈不知道在听什么鬼。
+
+---
+
+（2002 年起）
+
+## 十八年 == 人大统计本科四年 +
+## 硕士两年 + 硕博连读一年（未遂）+
+## 爱荷华州立大学统计博士四年 +
+## RStudio 工作七年
+
+???
+
+可能是人近中年，也可能是在美国农村而无车马喧，这两年喜欢回忆往事。今年是我人生中的低潮期，也借这次报告的机会整理一下我自己的人生。
+
+---
+class: inverse, center, middle
+
+## 为什么我的话不可信，或经验不具备参考价值
+
+???
+
+这场报告听起来可能会像有点像成功学，但这不是我的意思。我的目的主要是要刺激大家思考、质疑、挑战。
+
+当然，也要考虑我现在是夜里十一点，所以可能是在痴人说梦。
+
+---
+
+## 关于时间
+
+若把宇宙 138 亿年历史压缩到一年的时间里来看：
+
+- 英：https://en.wikipedia.org/wiki/Cosmic_Calendar
+- 中：http://www.ihep.cas.cn/kxcb/kjqy/201708/t20170816_4848217.html
+
+部分事件的时间尺度：
+
+- 恐龙：12 月 25 日
+- 鸟类：12 月 27 日
+- 花：12 月 28 日
+- 原始人：12 月 31 日 22 点 24 分
+- 农业文明：12 月 31 日 23 点 59 分 32 秒
+- 宋朝：12 月 31 日 23 点 59 分 56 秒
+
+--
+
+所以一个人的十八年算个啥？
+
+---
+
+## 幸存者偏差
+
+.center[[![Survivorship Bias](https://imgs.xkcd.com/comics/survivorship_bias.png)](https://xkcd.com/1827/)]
+
+???
+
+尽管这不是一场成功学讲座，但依旧提醒诸位：提防幸存者偏差。
+
+---
+
+## 斯金纳的鸽子
+
+> 而当经验论带给一个人信心的时候，可能比其他任何形式的垃圾还糟。
+>
+> ——塔勒布《随机漫步的傻瓜》
+
+---
+
+## 十八年回顾（本科 2002 - 06）
+
+- 高考填报人大统计志愿的原因：班主任告诉我人大统计开设精算专业，而精算师是金饭碗
+；另外统计在湖北招三人，比很多其它专业多
+
+- 作为贫困生，入学后承蒙老师们额外关照（如林秋池老师和班主任周翠翎老师）
+
+- 大二全班报考第一门精算，三人临阵脱逃，我是其中之一
+
+- 大二遭遇非典，百无聊赖中钻研编程（感谢薛薇老师带我入坑）、泡图书馆（翻了一些心理学的书）
+
+- 校门口收到一份免费建站的传单，尝试后对网站产生兴趣
+
+???
+
+回顾一下这十八年的路，看看我是如何沦落到如今当码农的地步的。
+
+在图书馆借了网站建设的书，看到一个发邮件的例子，回来在同学电脑上对着书手敲代码。
+
+---
+
+## 十八年回顾（本科 2002 - 06）
+
+- 大二下学期系里的网站负责同学毕业，“小鸟工作室”招收新成员
+
+- 学院网站这口锅我便从 2004 年背到 2009 年，有专属的办公室，与老师们近水楼台，修了不少电脑，主营业务为杀毒与重装系统
+
+- 后来应用统计科学研究中心的网站负责同学也毕业了，我便顺手也接过了中心的网站维护，因此结识当时的中心主任赵彦云老师，后成为我的本科毕业论文及硕士导师
+
+???
+
+哪位老师敢让我挂科我就挂他的电脑！（开玩笑）
+
+---
+
+## 十八年回顾（本科 2002 - 06）
+
+- 大三在学院网站上搭建 BBS（论坛），后成为[统计之都论坛](https://d.cosx.org)；从此本竖子开始成名，主营业务：回答 R 问题和考研问题、复印考研资料、盗版统计软件下载、盗版电子书下载（当然后来都删掉了）
+
+- 统计之都从 2006 年一直苟延残喘十四年至今
+
+- 大三时，“博客”的概念传入中国，于是开始在第一个博客平台“博客中国”（后改名为 bokee）上写博客，也为这个平台提了大量改进意见
+
+- 个人博客从 2005 年一直苟延残喘十五年至今
+
+???
+
+一些学院老师曾经当过版主（直到现在这些账号应该还都在）。
+
+我在网络上一直都用实名。
+
+搜索统计软件下载，我的个人网站曾经排第一。
+
+---
+
+## 十八年回顾（硕博 2006 - 09）
+
+对学术有强烈兴趣，然而我的数学水平是烂泥扶不上墙，只好转向写代码：用动画的形式展示我学懂了的数学概念；写了人生第一个 R 包 animation：[yihui.org/animation/](https://yihui.org/animation/)
+
+.center[![:image 50%, R 包 animation 中的梯度下降](https://assets.yihui.org/figures/animation/example/grad-desc/demo-a.gif)]
+
+---
+class: center, middle
+
+<video controls loop autoplay><source src="https://assets.yihui.org/figures/animation/example/quincunx/demo-a.mp4"><p>高尔顿板</p></video>
+
+---
+
+## 十八年回顾（硕博 2006 - 09）
+
+- 积极参加学术会议，尤其是国际会议，这也是受赵老师的鼓励以及提供各种机会
+
+- 研一上学期的寒假里我收到爱荷华州立大学统计系 Di Cook 教授的邮件，表示对我的 animation 网站感兴趣
+
+- 半年后我第一次出国参加会议（德国不莱梅的一个可视化研讨会），结识了 Di 以及可视化领域的领军人物，有些人保持联系至今
+
+- 两个月后再次去德国参加 useR! 会议，回来后在当年冬天发起第一届中国 R 会议；托诸多接锅侠（如邱怡轩、魏太云等）的福，这会议现在苟延残喘到了第十三届
+
+---
+
+## 十八年回顾（硕博 2006 - 09）
+
+- 托王星老师的福，大三时帮她翻译一本统计计算的书首次接触到 LaTeX，后来被王垠洗脑开始钻研，再后来也被他洗脑了 Linux 开始玩 Ubuntu（v5.04）
+
+- 有了 LaTeX 功底后，接触到了 Sweave（R 代码与 LaTeX 代码混编），没有它就没有后来的 knitr 和 R Markdown
+
+- 了解了可重复性研究的概念，为几年后开发 knitr 包打下了基础
+
+- animation 包中了 John Chambers 奖
+
+- 结构方程模型咨询
+
+---
+
+## 十八年回顾（留学 2009 - 13）
+
+- 那一年同班同学中包括我在内只有三个中国学生（一个北师大、一个某校文科生），大大减轻了学业竞争强度，这可能是后来我中了系里 Snedecor 奖的最重要的原因
+
+- 出门开会无数，结识人无数
+
+- 博士期间最重要的成果是 knitr 包，以及后来衍生出来的 R Markdown，而不是正常的“科研”
+
+- 发表过两篇论文，自认为太水，也不喜欢论文这种表达方式，更习惯在自己博客里灌水
+
+- 天不怕地不怕，写了第一本英文书（关于 knitr）
+
+---
+
+## 十八年回顾（工作 2013 至今）
+
+- 2012 年初因为 knitr 结识 RStudio 创始人 JJ Allaire，志同道合：立志革新统计学家和数据分析的软件工具箱
+
+- 2013 年找工作大约花了五分钟，作为 RStudio 第 11 号员工加入
+
+---
+
+## 随机事件？
+
+- 要是没收到那份免费建站的传单？
+
+- 要是没有薛薇老师的 VB 编程入门课？
+
+    - 要是第一门语言是 C 或 R，我可能不会对编程发生兴趣
+    - 大四考虑是否读研究生的时候，曾经想过去博客中国当客服，后来[被薛薇老师及时制止](https://yihui.org/cn/2005/09/thank-xue-wei/)
+
+- 要是没有统计之都，钟其顶便不会认识我；要不结识他，我便不会从他朋友毛希增那里目睹如何写 R 包；要是我不会写 R 包，便没有 animation 包，也就没有后续留学之事
+
+- 当然，要没有统计之都，就不会有一系列中流砥柱降临到我周围，如：魏太云、邱怡轩、熊熹师姐、冯凌秉、范建宁、朱雪宁、高涛、于淼等等
+
+???
+
+难以置信的随机事件影响：我对数学的兴趣起源于 97 年我初一暑假在舅舅家玩，夜里一觉醒来见我表哥还在做数学题。
+
+VB 有界面，所以可以写程序给别人直接用，当时我用 VB 给家里读小学二年级的一个小妹写了个随机四则运算练习的程序，可以说是我第一次感受到编程可以为我自己解决实际问题。
+
+---
+
+## 随机事件？
+
+- 要是我没在德国 useR! 会场里偶然瞥见前排一个人津津有味读 R-help 邮件列表？
+
+- 要是我没偶然看到一位中国 R 会议参会者的微博（提到 Chapman & Hall 出版社的一位优秀编辑）？
+
+- 要是 RStudio 晚两年成立？
+
+- 要是我上大学的时候谷歌就已经不能访问了？
+
+
+
+---
+class: middle, center, inverse
+
+## 统计思维的灵魂：考虑随机性
+
+如果你摸到另一手牌，能否一样把它打好？
+
+他人怎样的经验是值得学习借鉴的？好运恐怕是难以学来的
+
+---
+
+> 首先我要老调重弹：不管是战争、政治、医疗或投资各方面，我们都**不能以成败论英雄，而必须从“假如历史以另一种方式呈现”的另类成本来论断成败**。这种以不同方式呈现的历史，我们称之为“另类历史”。我们不能单凭结果就判定一项决策的优劣，但这样的观点似乎只有失败的人才会接受，成功者总把成功归因于决策得好。
+>
+> ——塔勒布《随机漫步的傻瓜》
+
+???
+
+英雄之所以是英雄，是因为他们的行为十分英勇，而不是因为战场上的成败。
+
+---
+
+## 统计推断与统计思维
+
+.smaller[
+> [...] formal, probability-based statistical inference should play no role in most scientific research, [...]
+
+> [...] _Replicating and predicting findings in new data and new settings_ is a stronger way of validating claims than blessing results from an isolated study with statistical inferences.
+
+> — Christopher Tong: [Statistical Inference Enables Bad Science; Statistical Thinking Enables Good Science](https://www.tandfonline.com/doi/full/10.1080/00031305.2018.1518264)
+]
+
+> 在我们的随机世界中，数学只是一种思考方式，除此几无其他作用。——《随机漫步的傻瓜》
+
+???
+
+可惜发表的学术和科研成果中似乎不太容易见到这种结算方式。
+
+---
+
+## 就算你现在听得一愣一愣，回头见到数据或图表又会忘了它背后的随机性
+
+.center[![:image 60%, 一幅 QQ 图](https://uploads.cosx.org/2011/07/normal-qq-plot.png)]
+
+---
+
+## 你看到的只是诸多可能中的一种
+
+.center[![:image 55%, 若干随机的 QQ 图](https://uploads.cosx.org/2011/07/true-qq-norm.gif)]
+
+.footnote[来源：[真理在缩水，还是上帝在掷骰子？](https://cosx.org/2011/07/we-never-know-randomness/)统计之都，2011]
+
+???
+
+苍茫的天涯是我的爱，什么样的节奏是最呀最摇摆
+
+---
+class: center, middle
+
+## [置信区间](https://yihui.org/animation/example/conf-int/)
+
+<video controls loop autoplay><source src="https://assets.yihui.org/figures/animation/example/conf-int/demo-a.mp4"><p>置信区间演示</p></video>
+
+---
+class: inverse, middle, center
+
+# $$Y=X\beta+\varepsilon$$
+
+### 十八年去掉随机运气成分之后，
+## 还剩下些什么？
+
+???
+
+这是个好问题。还剩下些什么？只剩下两滴冰冻的泪水？一滴化斗酒，添一份自醉；一滴沉落于，岁月的潮水。你肯定不想这个问题的答案是这样。
+
+---
+
+## 我的特点
+
+- 少下注，下大注，抗拒枯燥感，长期跟进
+
+    - 统计之都、个人网站、阅读、R 包
+    - 做出令人怦然心动的大数字
+
+- 广如网而淡如水的人脉，喜欢观察和琢磨人
+
+    - 读懂人心需要大数据吗？比如熊熹师姐与杨超越
+
+- 脑洞清奇，不走寻常路，瞎碰乱试，而且喜欢逆行
+
+    - 不喜欢的路尽早放弃，哪怕走的人再多，比如考精算（我的座右铭：世上无难事，只要肯放弃）
+
+- 内向但不胆怯，也不怕丢人
+
+???
+
+长期：让别人感觉就像 rep("睡了一觉醒来后你还在那儿", N)。How are you? How old are you? 怎么是你？怎么老是你？
+
+广如网：08 年开完 useR! 会议在德国免费搭车游玩了几天，车主是前一年来人大开会的立陶宛参会者，与我聊得投机，后来我去德国时正好他也在。
+
+淡如水：我通常都会与人保持距离，甚至刻意保持距离，我比较厌恶结党。《静静的顿河》、《双城记》。
+
+逆行：在中国苦练英文，在美国苦练中文。
+
+放弃：[过山车](https://yihui.org/cn/2017/01/roller-coaster/)
+
+---
+
+## 我的特点（邪恶的一面）
+
+- 营销
+
+    - 推崇适度的自我营销，但“度”要随着名气增大而逐渐收紧，见好就收，相忘于江湖
+
+- 激励
+
+    - 不要做浮浅的商业互吹，而是用真心欣赏、赞扬他人
+    - 士为知己者死
+    - 除了激励他人，也要自我激励（这不邪恶）
+
+- 搞笑
+
+    - 吸引人的注意力，但搞笑完也要及时投递干货
+    - 这手段可能越来越难用了，我们似乎陷入了搞笑疲劳（娱乐至死的时代）
+
+???
+
+很多人听我的报告可能都是为了看我又用了什么新的搞笑动图或讲了新的冷笑话而来的。
+
+---
+
+## 寻常路与逆行
+
+- 数据科学与统计学
+
+    - Andrew Gelman：[统计学是数据科学中最不重要的部分](https://statmodeling.stat.columbia.edu/2013/11/14/statistics-least-important-part-data-science/)（计算和数据库离了统计能活，但统计离了计算和数据库就不能活）
+    - 如果所有人都在学写代码、制图表，你也应该加强你的代码技能吗？[或许你该选择回去坐冷板凳推公式？](https://cosx.org/2019/08/copss-hadley-special-comment/)
+
+- 人工智能？看到这种高赞的社交媒体消息你作何感想？
+
+    > Spotify Wrapped is a great example of how you can build a fantastic data product without machine learning or AI. — [来源：推特](https://twitter.com/beeonaposy/status/1334203860345208832)
+
+???
+
+如果简单的排序有用，那还要人工智能干什么？
+
+---
+
+## 寻常路与逆行
+
+为什么我们奉为金科玉律的统计显著性被误读了一百多年？
+
+.smaller[
+> It turns out that Francis Edgeworth, who introduced "significant" in statistics, and Karl Pearson, who popularized it in statistics, used it differently than we do. For Edgeworth and Pearson, _"being significant" meant "signifying"_. An observed difference was significant if it signified a real difference, and you needed a very small p-value to be sure of this. _A p-value of 5% meant that the observed difference might be significant, not that it definitely was._
+
+> — Glenn Shafer, [On the origins of "statistical significance"](https://statmodeling.stat.columbia.edu/2019/09/26/glenn-shafer-tells-us-about-the-origins-of-statistical-significance/)
+]
+
+---
+
+## 寻常路与逆行
+
+统计显著性导致的发表偏差（Publication bias）如何纠正？是否可以创建一本刊物，专门发表“不显著”的结果？
+
+> 什么事情也没发生这个事实，可能包含重要的信息，正如在《银色马》中福尔摩斯指出的，奇怪的事是狗并没有吠。造成更大问题的是，许多科学成果没有发表，因为它们的数据并未呈现统计上的显著差别，不过实际上它们还是提供了一些信息。
+>
+> ——塔勒布《随机漫步的傻瓜》
+
+---
+
+## 寻常路与逆行
+
+为什么我们的统计教育要年复一年让学生零碎学习几学期的各种假设检验？
+
+- Jonas Kristoffer Lindeløv：[常见统计检验的本质都是线性模型（或：如何教统计学）](https://cosx.org/2019/09/common-tests-as-linear-models/)，统计之都翻译
+
+---
+
+## 观察和琢磨人
+
+.smaller[
+> The hard part is not the data wrangling. That is just time consuming. The hard part is the people wrangling.
+
+> — [Lisa Thomasen](https://twitter.com/apreshill/status/1179256184487981056)
+
+<!-- -->
+
+> No amount of statistical expertise or tooling can fix this fundamental human problem.
+
+> — Roger Peng, [What can we learn from data analysis failures?](https://simplystatistics.org/2018/04/23/what-can-we-learn-from-data-analysis-failures/)
+]
+
+但不要走过头了走上权术之路。
+
+---
+
+## 自我激励：自己喂自己袋盐
+
+吃你自己生产的狗粮。
+
+- 为什么我对编程产生兴趣？因为我可以亲眼见到家里的小妹用我写的 VB 程序。
+- 为什么我要写 animation 包？因为我数学差，所以我想向其他数学差的人解释清楚数学原理。
+- 为什么写 knitr？因为作业太多，我不想单独运行代码再复制粘贴结果，想快点写完作业。
+- 为什么写 bookdown？因为我写第一本书时觉得 LaTeX 太容易让我陷入排版的细枝末节（尽管我用 LyX 已经轻松多了）。
+- 为什么写 blogdown？因为我自己常年大量写博客。
+
+???
+
+意思不是自己生产的狗粮，含着眼泪也要吃完。
+
+---
+
+## 自我激励：自己喂自己袋盐
+
+你有什么痛点是可以用你自己的（数据科学）专业技能解决的？如果你真的相信数据科学有用，你自己用它吗？你的哪项日常生活决策是基于你自己的数据分析的？
+
+当然，也许你不直接用，而是在别人的产品中间接受益（电商推荐、滴滴打车等），但如果你能主动而不是被动使用自己的专业技能，它的激励程度要强得多，而且也许能创立你自己的一片小江湖。
+
+不过也要小心“铁锤人倾向”：手里拿着锤子，看什么都是钉子（想去砸砸）。同时参见[麦纳马拉谬误](https://zh.wikipedia.org/wiki/%E9%BA%A5%E7%B4%8D%E9%A6%AC%E6%8B%89%E8%AC%AC%E8%AA%A4)（“从数据到结论” 与 “只从数据到结论”）。
+
+???
+
+抓毒蛇的故事。
+
+---
+
+## 不怕丢人
+
+作报告紧张怎么破？写的文章不敢给人看？
+
+.smaller[
+> One of the symptoms of an approaching nervous breakdown is the belief that one's work is terribly important.
+
+> — Bertrand Russell
+]
+
+???
+
+我作报告通常不紧张，而且听众越多我越不紧张，要紧张一般也就是开头一分钟略紧张一下。
+
+去年我回母校作报告讲到其中一页时，在讲台上现场做了五十个俯卧撑。
+
+---
+
+## 不怕丢人
+
+《[我算个什么](https://www.pinshiwen.com/waiwen/ssjg/2019050113975.html)》——柯里佐夫
+
+> ……  
+我是个浅薄的人，我不是圣者，  
+我需要知道的并不多；  
+在高低不平的道路上，  
+我像个瞎子蹒跚而行，  
+遇上可笑的，就嘲笑一通  
+碰上美好的，就束手待擒；  
+遭到不幸的事，就痛哭一场，  
+我不希求知道——我算个什么。
+
+---
+
+## 营销
+
+我讨厌标题党，不过这……也太太太不标题党了吧……
+
+.center[![:image 60%, 对读者无意义的标题](https://user-images.githubusercontent.com/163582/101722753-85c59a00-3a70-11eb-8bad-129220d75953.png)]
+
+.footnote[套用《匆匆》句式：但是，聪明的，你告诉我，这究竟是什么讲座？]
+
+---
+
+## 营销
+
+> 我网故我在。
+>
+> ——[沃茨基 · 硕德](https://yihui.org/cn/2016/12/student-project/)
+
+还没有个人网站的可以考虑回去整一个：
+
+```r
+remotes::install_github('rstudio/blogdown')
+blogdown::new_site(theme = 'yihui/hugo-prose')
+```
+
+参考书：https://bookdown.org/yihui/blogdown/
+
+公众号？
+
+---
+class: inverse
+background-image: url(https://images.unsplash.com/photo-1496160568811-aaa6a214c499?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80)
+background-size: cover
+
+## 营销
+
+格式不是为了酷炫，而是辅助读者理解、减轻阅读的疲劳。
+
+- 个人作业、报告、文章：试试不一样的字体、比单倍行距略大一点的行距、略窄的页宽
+
+- 制表：奇偶行用不同背景色
+
+- 作图：试试不同的主题，不一定总用那灰不拉几的 ggplot
+
+- 作图：通常加上细微的网格线
+
+- 演讲：字少点，用锦上添花而不是喧宾夺主的全屏背景图（但这个手段已经快被用烂，所以我个人已经不太用）
+
+???
+
+自己去观察和反思，怎样的格式让你觉得读起来舒服，然后模仿。
+
+殷素素告诉张无忌：“越好看的女人越会骗人”。这对演讲可能也适用。
+
+---
+
+## 网页技能为什么实用又好玩
+
+现在现场演示本场报告中的唯一一点干货：如何用 CSS 和 JavaScript 玩任意网页。
+
+- 任何元素的样式都是可以修改的（CSS）
+
+- 任何元素的内容也是可以修改的（JavaScript）
+
+--
+
+我个人相信网页会是排版的未来（参见 [pagedown 包](https://github.com/rstudio/pagedown)），尽管 LaTeX 和 Word 在可预见的未来还不会消失。
+
+???
+
+定义一个标签的样式，从而批量修改样式。
+
+---
+
+## 心理学
+
+参阅维基：[认知偏差列表](https://zh.wikipedia.org/wiki/%E8%AA%8D%E7%9F%A5%E5%81%8F%E8%AA%A4%E5%88%97%E8%A1%A8)
+
+> 如果人类是有希望被拯救的，那就只能依靠心理学。
+>
+> ——[霍志骥](https://yihui.org/cn/2017/12/influence/)（巨子）
+
+---
+
+## 掌控随机
+
+> 禁欲的斯多葛学派和享乐的伊壁鸠鲁学派，都建议人要掌控自己的命运。
+>
+> 情绪起伏时，坚定不为所动。有那些情绪反应并没有错，也不失尊严—人生来就有情绪。错的是不能像英雄般，或至少像个有尊严的人那样挺直腰杆。这才是斯多葛哲学的真正意义，它要人与概率平起平坐。
+>
+> ——《随机漫步的傻瓜》
+
+???
+
+塔勒布在这本书的最后一章有点站着说话不腰疼。
+
+---
+
+## 掌控随机
+
+我对此的翻译是：当 $\varepsilon$ 起伏时，扶稳你的 $\beta$。
+
+$$Y=X\beta+\varepsilon$$
+
+当然，古人的翻译更好：
+
+- 悲欢离合总无情，一任阶前点滴到天明。
+
+- 竹杖芒鞋轻胜马，谁怕？一蓑烟雨任平生。
+
+- 黄花白发相牵挽，付与时人冷眼看。
+
+???
+
+村上春树《世界尽头与冷酷仙境》中有一段话，可以作为随机项的注解：
+
+世上存在着不能流泪的悲哀，这种悲哀无法向人解释，即使解释人家也不会理解。它永远一成不变，如无风夜晚的雪花静静沉积在心底。
+
+---
+class: center, middle
+
+# 谢谢！
+
+今天幻灯片的网址：[slides.yihui.org/2020-random-walk.html](https://slides.yihui.org/2020-random-walk.html)
+
+来不及抄下来的话，在我简历页中的报告列表里可以找到：[yihui.org/cn/vitae/](https://yihui.org/cn/vitae/)

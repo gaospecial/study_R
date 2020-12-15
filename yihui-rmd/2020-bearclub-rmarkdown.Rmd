@@ -1,0 +1,400 @@
+---
+title: "R Markdown 技能杂谈"
+author: "谢益辉，RStudio"
+date: "2020/07/10 @ 狗熊会"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    chakra: remark/0.14.1.min.js
+    css: [css/chinese.css]
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      beforeInit: js/macro.js
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE, width = 50)
+```
+
+## R Markdown 厨艺指南
+
+今天的报告基于一本尚未出版的书稿（已定稿、两个月后有希望面市）：https://bookdown.org/yihui/rmarkdown-cookbook/
+
+今天的幻灯片已经列在我个人网站的简历页中，手快的听众现在可以前去挖坟：[yihui.org/cn/vitae/](https://yihui.org)
+
+???
+
+首先感谢狗熊会和政委的邀请，今天我很高兴为国内听众讲一场报告。为什么高兴呢？当然是因为在线讲报告不用洗头！其实我是更高兴讲中文报告。我在美国待了十年了，但身在曹营心在汉。我依旧热爱中文，平时做中文报告的机会比较少，而且中文报告比较有挑战，因为听众笑点太高了（给英文听众讲报告，随便讲个笑话都能笑得他们满地找牙）。感谢大家今天这么晚还坚持来听报告，虽然我也不清楚你们到底是为了听报告而来，还是只是来验证一下我是不是还健在，因为我的博客已经快一年没更新了。承蒙各位关心，过去一年我有多半时间都赔进这本书里去了。现在我自己读这本书都有点反胃了，因为要反复修订，读了太多遍。今天我宁愿讲怎么下厨做饭，但鉴于这是给狗熊会作报告，而不是熊掌会，我还是老实讲技术吧。
+
+---
+
+## 来，上几道开胃菜先
+
+现在以光速过一遍我今年在 RStudio 大会上的报告（同一个 R Markdown 文档变脸十四种输出格式）：https://rstudio.com/resources/rstudioconf-2020/one-r-markdown-document-fourteen-demos/
+
+越简单的源文档格式，普适性就越强。
+
+如 Markdown 可以转换输出若干种不同文档格式（以牺牲部分排版功能为代价），而 LaTeX 的强项是高质量的 PDF，生成其它文档格式则相对较难。
+
+没有绝对正确的工具，任何工具都存在取舍问题。每个人的损失函数都不同，所以不要轻信工具的宣传（包括我的）。
+
+---
+
+## 1. 关于 Markdown，当今世上只存在两款良心编辑器
+
+世上 [Markdown 的编译工具有无数种](https://yihui.org/cn/2017/08/markdown-flavors/)，而良心编译工具有且仅有一款，即 Pandoc。它最在乎标准，语法覆盖面也最广。
+
+基于 Pandoc 的 Markdown 标准的良心可视化编辑器只有两款：Typora（国人开发），以及本厂即将推出的 RStudio 可视化编辑器。目前是试验性质的产品，我书中有简略介绍：https://bookdown.org/yihui/rmarkdown-cookbook/rstudio-visual.html 老板还没发话放行，所以本节目前看着是空的，但真正的内容我已经写在网页注释中了。
+
+???
+
+机智不机智、惊喜不惊喜？
+
+这个秘密我还从来没对第二个人说过。你要是今晚还睡得着觉，那你真是太没良心了。
+
+---
+background-image: url(https://db.yihui.org/imgur/CwBsAqs.png)
+background-size: contain
+background-position: center top
+class: bottom, center
+
+## 太强啦
+
+???
+
+截图来自《十全九美》。
+
+---
+
+## 2. 实时编译和预览 R Markdown
+
+没装写轮眼（xaringan）的装一下先：
+
+```{r, eval=FALSE}
+xfun::pkg_load2('xaringan')
+```
+
+调用函数 `xaringan::inf_mr()` 或者 RStudio 插件 “Infinite Moon Reader” 皆可开启实时预览：只需要保存当前的 Rmd 文件，写轮眼会自动重新编译它并刷新结果。
+
+对写轮眼幻灯片来说，[究极无限月读](https://yihui.org/en/2019/02/ultimate-inf-mr/)更是可以让你一边打字一边预览。再也不用猛击 Knit 按钮了！
+
+.footnote[注意：只支持 HTML 输出格式（因为背后涉及到 JavaScript 技术）。]
+
+???
+
+没看过火影忍者的人可能会对这个 R 包中的各种术语感到莫名其妙。我已经被问得开始怀疑人生。
+
+演示一下普通 HTML 文档和写轮眼幻灯片。
+
+---
+
+## 3. [把一系列 R 图片拼接为 GIF 动画](https://yihui.org/en/2018/08/gifski-knitr/)
+
+安装 **gifski** 包：
+
+```{r, eval=FALSE}
+xfun::pkg_load2('gifski')
+```
+
+再用代码段选项 `animation.hook='gifski'`，如:
+
+````md
+```{r, animation.hook='gifski'}`r ''`
+for (i in 1:2) {
+  pie(c(i %% 2, 6), col = c('red', 'yellow'),
+    labels = NA)
+}
+```
+````
+
+---
+
+.center[![Pacman](https://user-images.githubusercontent.com/163582/44246516-30c93000-a1a4-11e8-8aa5-8876e51a227f.gif)]
+
+.footnote[通常不建议使用饼图，除了制作上面的吃豆人。]
+
+---
+class: inverse
+
+## 示例
+
+https://github.com/rstudio-conf-2020/rmarkdown-dashboard/blob/master/materials/exercises/06-Recipes/01-animation.Rmd
+
+???
+
+interval 调整动画帧与帧之间的时间间隔。
+
+---
+
+## 4. 麻麻再也不用担心我的 LaTeX 装不上或缺包了
+
+.center[![TinyTeX 图标](https://yihui.org/images/logo-tinytex.png)]
+
+---
+
+- LaTeX 用户的痛苦你造吗？ https://yihui.org/tinytex/pain/
+
+- 通行的 LaTeX 发行版通常都超级占空间：TeX Live、MiKTeX、MacTeX (~5Gb)。TinyTeX ([yihui.org/tinytex](https://yihui.org/tinytex)) 一百多兆。一行代码安装：
+    ```r
+    tinytex::install_tinytex()
+    ```
+
+- `tinytex::latexmk()` 帮你搞定常见的 LaTeX 错误和问题。
+
+    1. 自动安装缺失的包。
+    2. 多次编译文档：你知道为什么要重复跑 `pdflatex + bibtex + makeidx + pdflatex + pdflatex` 吗？
+
+???
+
+你到底是个天天折腾软件问题的码农，还是个排版工人？
+
+有用户告诉我，要不是为了安装 TinyTeX 而卸载其它 LaTeX 发行版，他都不知道过去几年他的 LaTeX 已经占了 20G 硬盘。
+
+---
+class: inverse
+
+## 示例
+
+https://github.com/rstudio-conf-2020/rmarkdown-dashboard/blob/master/materials/exercises/06-Recipes/02-tinytex.Rmd
+
+我们故意删掉几个 LaTeX 包，看 tinytex 如何机智地自动找出它们并装上。
+
+---
+class: center
+
+![:image 75%, 如何画一个猫头鹰](gif/draw-an-owl.jpg)
+
+???
+
+创建个 PDF，中间步骤却一大堆。
+
+---
+
+class: center
+
+![:image 75%, 如何创建 PDF](https://user-images.githubusercontent.com/163582/68422075-18f11980-0165-11ea-8589-24e168a3f246.jpg)
+
+???
+
+TinyTeX 自动化一切可自动化的步骤。
+
+老子喊你画地图，你跟老子在这里搞创作！
+
+---
+
+## 5. CSS 与 JavaScript：从入门到上瘾
+
+关于网页三件套 HTML、CSS、JavaScript 的简略介绍：https://bookdown.org/yihui/blogdown/website-basics.html
+
+- 浏览器自带的开发者工具（Developer Tools）
+
+- 初学 CSS 的难点：理解[选择器](https://www.w3schools.com/cssref/css_selectors.asp)的层级结构
+
+- 如何向 R Markdown 中嵌入 CSS 和 JavaScript 代码
+
+- 如何自定义各种 R Markdown 元素的样式（使用通用选择器、或用类名或唯一标识符等）
+
+???
+
+开发者工具绝对是让你相见恨晚的神器！学了这一招之后，你晚上回家躲在被窝里大笑出来。
+
+你可以用它修改网页上的任何东西，包括你的银行存款余额（虽然改了也没用）。
+
+示例：http://som.xjtu.edu.cn/info/1014/3534.htm
+
+- 将副教授升教授
+- 删除元素
+- 圆角图片
+- JavaScript 修改元素（样式、内容）
+
+R Markdown 文档中如何插入 CSS 和 JS 代码。
+
+---
+
+## 6. 谁说网页不能用来排版？
+
+如果你在这个看脸的时代也迷信 PDF 的高质量，要知道其实任何网页都可以打印成 PDF。例如用 Chrome 或 Firefox 浏览器。
+
+或使用 [**pagedown**](https://github.com/rstudio/pagedown) 包调用 R 函数和 Chrome 打印 PDF。
+
+.center[
+![pagedown](https://user-images.githubusercontent.com/163582/51942716-66be4180-23dd-11e9-8dbc-fdb4f465d1c2.png)
+]
+
+---
+class: inverse
+
+## 示例
+
+https://github.com/rstudio-conf-2020/rmarkdown-dashboard/blob/master/materials/exercises/06-Recipes/03-chrome.Rmd
+
+无论是本地 HTML 文件，还是在线的网页，全部都能打：
+
+```r
+pagedown::chrome_print('03-chrome.Rmd')
+pagedown::chrome_print('03-chrome.html')
+pagedown::chrome_print('https://pagedown.rbind.io/html-letter')
+```
+
+除了打印 PDF，[**pagedown**](https://github.com/rstudio/pagedown) 也提供了很多种网页样式，包括海报、简历、名片、书籍、论文、信函等。这些在[我去年的报告](https://rstudio.com/resources/rstudioconf-2019/pagedown-creating-beautiful-pdfs-with-r-markdown-and-css/)中有简略介绍。
+
+---
+
+## 7. 图表章节交叉引用
+
+1. 用 **bookdown** 包里的输出格式，如：
+
+    ```yaml
+    output:
+      - bookdown::html_document2
+      - bookdown::pdf_document2
+      - bookdown::word_document2
+    ```
+
+2. 保证被引用的对象有个标识符（ID）；
+
+3. 引用的语法 `\@ref(ID)`。
+
+---
+class: inverse
+
+## 示例
+
+https://github.com/rstudio-conf-2020/rmarkdown-dashboard/blob/master/materials/exercises/06-Recipes/07-cross-reference.Rmd
+
+章节、图、表、公式，皆可交叉引用。
+
+---
+
+文档元素的编号和交叉引用都应该动态生成，而不要写死数字，因为你不知道你将来会不会把“图 3” 改成“图 4”。
+
+.center[![Kicking the wrong ball](gif/kick-head.gif)]
+
+---
+
+## 8. 如何对付 PDF 中的超宽文本
+
+![PDF 中超宽的文本](https://bookdown.org/yihui/rmarkdown-cookbook/images/wrap-none.png)
+
+???
+
+我想多数用 R Markdown 编过 PDF 的人应该都遇到过这个问题，也就是如何把一行文本掰弯。
+
+---
+
+三种可能的超宽情形：
+
+1. 源代码超宽：你可以尝试自行手工折行、调整。
+
+1. 文本输出超宽：先试试 `options(width = N)` 是否管用，N 是一行文本的宽度，可以试小一点的数值如 40。
+
+1. 若都不管用，只能上 LaTeX 的 **listings** 包了。
+
+---
+
+```yaml
+---
+output:
+  pdf_document:
+    pandoc_args: --listings
+    includes:
+      in_header: listings-settings.tex
+---
+```
+
+`listings-settings.tex` 文件的内容：
+
+```tex
+\lstset{
+  breaklines=true,
+  basicstyle=\ttfamily
+}
+```
+
+详见：https://bookdown.org/yihui/rmarkdown-cookbook/text-width.html
+
+---
+
+## 9. 计算太耗时？上缓存
+
+设置代码段选项 `cache = TRUE`。一次运行之后，如果下次不对代码作修改，那么下次运行会加载缓存而跳过真正的计算；如果有改动，那么缓存将会被清空、导致重新跑代码。
+
+示例：https://github.com/rstudio-conf-2020/rmarkdown-dashboard/blob/master/materials/exercises/06-Recipes/01-animation.Rmd
+
+
+---
+
+天下没有免费的午餐。缓存能节省计算的时间，但[也可能耗费你学习它的时间。](https://yihui.org/en/2018/06/cache-invalidation/)
+
+.center[![如何减掉 10kg](images/lose-weight.jpg)]
+
+---
+
+我个人对当初 **knitr** 中 `cache = TRUE` 的设计越来越感到不满意（没错，这是本人的设计），现在我倾向于推荐使用 `xfun::cache_rds()` 缓存，它相对稳定一些，学习起来应该也容易一些。
+
+```r
+res <- xfun::cache_rds({
+  Sys.sleep(3)  # 假装很慢
+  1:10
+})
+```
+
+详见：https://bookdown.org/yihui/rmarkdown-cookbook/cache-rds.html
+
+---
+
+## 10. 使用 Python 及其它语言
+
+- Python、Julia、SQL、C++、Shell 脚本、JavaScript、CSS，等等都可以
+
+- **knitr** 支持四十多种语言（当然，多数语言的“支持”力度并不强，所以不要抱太高期望）
+
+    ```r
+    names(knitr::knit_engines$get())
+    ```
+
+- 要用别的语言的话，把 r 换成别的名字就好了（所有可用名参见上一行代码），如：
+    ````md
+    ```{python}`r ''`
+    x = 42
+    ```
+    ````
+
+---
+class: inverse
+
+## 示例
+
+https://github.com/rstudio-conf-2020/rmarkdown-dashboard/blob/master/materials/exercises/06-Recipes/14-lang.Rmd
+
+---
+
+随便你什么语言，尽管一个个放马过来。
+
+.center[![:image 70%, 六六六](gif/duiyou-3.gif)]
+
+---
+class: inverse
+
+## R Markdown 还可以这样玩
+
+R Markdown + Shiny 人脸识别: https://yihui.shinyapps.io/face-pi/
+
+源代码：https://github.com/yihui/shiny-apps/tree/master/face-pi
+
+.center[![:image 20%, 狗脸](gif/dog-wat.gif)]
+
+---
+class: center, middle
+
+# 谢谢！
+
+今天幻灯片的网址我丢进我简历页中的报告列表里了：
+
+https://yihui.org/cn/vitae/
+
+???
+
+关于 R Markdown 中文书。
