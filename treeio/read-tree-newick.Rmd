@@ -1,0 +1,108 @@
+---
+title: "Read Newick tree"
+date: "2020-12-16"
+output:
+  html_document:
+    
+  md_document:
+    variant: markdown_github
+---
+
+使用 `read.tree()` 读取 LTP newick 格式的树文件时出现了错误。 初步定为可能是因为其不适应多行造成的，于是做如下实验。
+
+## 多行格式是否影响树的读取？
+
+**Generate tree**
+
+```{r}
+oneline_tree <- "((t2:0.04,t1:0.34):0.89,(t5:0.37,(t4:0.03,t3:0.67):0.9):0.59); "
+multiline_tree <- "((t2:0.04,
+t1:0.34
+):0.89,
+(t5:0.37,
+(t4:0.03,
+t3:0.67
+):0.9)
+:0.59
+); "
+
+writeLines(oneline_tree, "tree1.newick")
+writeLines(multiline_tree, "tree2.newick")
+```
+
+**Read tree**
+
+```{r}
+library(ggtree)
+(tr1 <- read.tree("tree1.newick"))
+(tr2 <- read.tree("tree2.newick"))
+```
+
+结果是不影响。
+
+## 与 tip label 的格式有关吗？
+
+```{r}
+quote_tree <- "(('t2':0.04,
+'t1':0.34
+):0.89,
+('t5':0.37,
+('t4':0.03,
+'t3':0.67):
+0.9):
+0.59)
+; "
+writeLines(quote_tree, "quote_tree.newick")
+(read.tree(file = "quote_tree.newick"))
+```
+
+这样的话，`tip.label` 就有问题了。 这个问题是与多行 newick 格式中出现带引号的 tip label 有关的。
+
+## 从 `read.tree()` 源码入手
+
+```{r}
+ape::read.tree
+```
+
+经查可能与 `single_quotes()` 这个函数的功能有关。
+
+考虑到这种情况仅出现在 **多行** 且 **带引号** 的时候， 那么最简单的解决方法就是把多行变成单行。
+
+```{r}
+file <- xfun::magic_path("quote_tree.newick")
+tree <- scan(file = file, what = "", sep = "\n", quiet = TRUE)
+tree_collapsed <- paste0(tree, collapse = "")
+read.tree(text = tree)
+read.tree(text = tree_collapsed)
+```
+
+这样就搞定了。
+
+## 更新 `treeio` 中的函数？
+
+```{r}
+read.newick <- function(file, node.label = "label", ...) {
+    node.label <- match.arg(node.label, c("support", "label"))
+    tree_data <- scan(file = file, what = "", sep = "\n", quiet = TRUE, ...)
+    tree_data <- paste0(tree_data, collapse = "")
+    tree <- read.tree(text = tree_data)
+    if (node.label == "label")
+        return(tree)
+
+    df <- tibble(node = nodeIds(tree),
+                     support = as.numeric(tree$node.label))
+
+    tree$node.label <- NULL
+    new("treedata",
+        phylo = tree,
+        data = df)
+}
+```
+
+
+
+```{r}
+file <- "https://www.arb-silva.de/fileadmin/silva_databases/living_tree/LTP_release_123/LSU_release_02_2017/LTPs123_LSU_tree.newick"
+read.newick(file, skip = 11)
+```
+
