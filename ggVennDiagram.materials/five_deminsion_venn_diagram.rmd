@@ -10,6 +10,10 @@ output:
 在 (Wiki百科)[https://en.wikipedia.org/wiki/File:Symmetrical_5-set_Venn_diagram.svg] 找到了一个
 5维韦恩图的椭圆参数。
 
+> https://math.stackexchange.com/questions/1475/why-can-a-venn-diagram-for-4-sets-not-be-constructed-using-circles
+
+> [6 sets is possible with triangles](https://www.combinatorics.org/files/Surveys/ds5/VennTriangleEJC.html)
+
 ```{r}
 library(dplyr)
 parameters <- list(c(9,14, 40,80,72),
