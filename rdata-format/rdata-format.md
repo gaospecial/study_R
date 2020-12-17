@@ -36,9 +36,11 @@ and `save()`, or `load()` and `saveRDS()` selectively.
 ``` r
 # create a data d, and save it
 d <- 1:5
+e <- 8
 save(d, file = "rda.Rda")
+save.image(file = "image.RData")
 saveRDS(d, file = "rds.rds")
-rm(d)
+rm(d,e)
 ```
 
 然后再读取他们。
@@ -49,6 +51,8 @@ rm(d)
 ``` r
 a <- load("rda.rda")
 ```
+
+`load()` 可以载入单个变量，也可以载入多个变量。
 
 ``` r
 a
@@ -72,8 +76,58 @@ c
     ## [1] 1 2 3 4 5
 
 ``` r
-rm(a,d,c)
+rm(list=ls())
 ```
+
+``` r
+a <- load("image.RData")
+a
+```
+
+    ## [1] "d" "e"
+
+``` r
+d
+```
+
+    ## [1] 1 2 3 4 5
+
+``` r
+e
+```
+
+    ## [1] 8
+
+这时候如果还想要通过上面的方法改变变量的名称，那就有问题了。
+
+``` r
+(cmd <- parse(text = paste0("c <- ",a)))
+```
+
+    ## expression(c <- d, c <- e)
+
+``` r
+eval(cmd)
+c
+```
+
+    ## [1] 8
+
+在多次赋值后，最后一个值被赋给了 `c` 变量，同时没有任何提示。
+
+``` r
+rm(list=ls())
+```
+
+如果是一个空的环境的话，保存后会出现什么情况呢？
+
+``` r
+save.image(file = "empty.RData")
+a <- load("empty.RData")
+a
+```
+
+    ## character(0)
 
 其次看 `readRDS()`, 它将变量的值赋给了 `c`。
 
