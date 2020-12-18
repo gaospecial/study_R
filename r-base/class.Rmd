@@ -1,0 +1,62 @@
+---
+title: "判断对象 Class 的几种方法"
+date: '2020-12-18'
+output: 
+  md_document:
+    variant: markdown_github
+
+---
+
+我们构造一个常用的 `ggplot` 对象。
+
+```{r}
+library(ggplot2)
+p <- ggplot()
+```
+
+大概可以有以下几种情况获得一些对象信息。
+
+```{r}
+class(p)
+typeof(p)
+attr(p,"class")
+```
+
+那么如何判断它的 class 呢？
+
+## 方法一：最方便的 `is()` 
+
+```{r}
+is.ggplot(p)
+is(p,"ggplot")
+```
+这可能是最简便的方法了。`methods("is")` 是一个 S3 泛型函数，可以用于检测对象的类。
+还有其它一些函数列在下面。
+
+
+```{r}
+methods("is")
+```
+
+## 方法二：最直观的 `class()`
+
+
+```{r}
+"ggplot" %in% class(p)
+```
+
+因为一个对象的 Class 不止一种，所以不能直接用数值比较。
+但是加上一个 `any()` 或许也可以达到同样的效果。
+
+```{r}
+class(p) == "gg"
+any(class(p) == "gg")
+```
+
+
+## 方法三：最严谨的 `inherits()`
+
+```{r}
+inherits(p, "ggplot")
+```
+
