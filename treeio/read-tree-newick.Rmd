@@ -2,13 +2,22 @@
 title: "Read Newick tree"
 date: "2020-12-16"
 output:
-  html_document:
-    
   md_document:
     variant: markdown_github
+  html_document:
+    self_contained: yes
 ---
 
 使用 `read.tree()` 读取 LTP newick 格式的树文件时出现了错误。 初步定为可能是因为其不适应多行造成的，于是做如下实验。
+
+```{r}
+library(ape)
+LSU_file <- "https://www.arb-silva.de/fileadmin/silva_databases/living_tree/LTP_release_123/LSU_release_02_2017/LTPs123_LSU_tree.newick"
+SSU_file <- "https://www.arb-silva.de/fileadmin/silva_databases/living_tree/LTP_release_132/LTPs132_SSU_tree.newick"
+read.tree(LSU_file, skip = 11)
+read.tree(SSU_file, skip = 15)
+```
+
 
 ## 多行格式是否影响树的读取？
 
@@ -33,7 +42,6 @@ writeLines(multiline_tree, "tree2.newick")
 **Read tree**
 
 ```{r}
-library(ggtree)
 (tr1 <- read.tree("tree1.newick"))
 (tr2 <- read.tree("tree2.newick"))
 ```
@@ -102,7 +110,6 @@ read.newick <- function(file, node.label = "label", ...) {
 
 
 ```{r}
-file <- "https://www.arb-silva.de/fileadmin/silva_databases/living_tree/LTP_release_123/LSU_release_02_2017/LTPs123_LSU_tree.newick"
-read.newick(file, skip = 11)
+sessionInfo()
 ```
 

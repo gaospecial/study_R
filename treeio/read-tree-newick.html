@@ -430,6 +430,29 @@ summary {
 
 
 <p>使用 <code>read.tree()</code> 读取 LTP newick 格式的树文件时出现了错误。 初步定为可能是因为其不适应多行造成的，于是做如下实验。</p>
+<pre class="r"><code>library(ape)
+LSU_file &lt;- &quot;https://www.arb-silva.de/fileadmin/silva_databases/living_tree/LTP_release_123/LSU_release_02_2017/LTPs123_LSU_tree.newick&quot;
+SSU_file &lt;- &quot;https://www.arb-silva.de/fileadmin/silva_databases/living_tree/LTP_release_132/LTPs132_SSU_tree.newick&quot;
+read.tree(LSU_file, skip = 11)</code></pre>
+<pre><code>## 
+## Phylogenetic tree with 1614 tips and 1613 internal nodes.
+## 
+## Tip labels:
+##   Aeromonas_hydrophila_subsp._anaerogenes__AF508058__Aeromonadaceae, Aeromonas_hydrophila_subsp._hydrophila__CP000462__Aeromonadaceae, Aeromonas_media__AF508059__Aeromonadaceae, Aeromonas_salmonicida_subsp._salmonicida__AY987630__Aeromonadaceae, Aeromonas_salmonicida_subsp._pectinolytica__ARYZ01000149__Aeromonadaceae, Aeromonas_jandaei__AY138850__Aeromonadaceae, ...
+## Node labels:
+##   , Bacteria, , , , , ...
+## 
+## Rooted; includes branch lengths.</code></pre>
+<pre class="r"><code>read.tree(SSU_file, skip = 15)</code></pre>
+<pre><code>## 
+## Phylogenetic tree with 13903 tips and 13902 internal nodes.
+## 
+## Tip labels:
+##   FJ611848_Erwiniagerundensis_Erwiniaceae_ErwGerun, FJ611848_Erwiniagerundensis_Erwiniaceae_ErwGerun, FJ611848_Erwiniagerundensis_Erwiniaceae_ErwGerun, FJ611848_Erwiniagerundensis_Erwiniaceae_ErwGerun, FJ611848_Erwiniagerundensis_Erwiniaceae_ErwGerun, FJ611848_Erwiniagerundensis_Erwiniaceae_ErwGerun, ...
+## Node labels:
+##   , Bacteria, , , , , ...
+## 
+## Rooted; includes branch lengths.</code></pre>
 <div id="多行格式是否影响树的读取" class="section level2">
 <h2>多行格式是否影响树的读取？</h2>
 <p><strong>Generate tree</strong></p>
@@ -447,17 +470,6 @@ t3:0.67
 writeLines(oneline_tree, &quot;tree1.newick&quot;)
 writeLines(multiline_tree, &quot;tree2.newick&quot;)</code></pre>
 <p><strong>Read tree</strong></p>
-<pre class="r"><code>library(ggtree)</code></pre>
-<pre><code>## Registered S3 method overwritten by &#39;treeio&#39;:
-##   method     from
-##   root.phylo ape</code></pre>
-<pre><code>## ggtree v2.4.0  For help: https://yulab-smu.github.io/treedata-book/
-## 
-## If you use ggtree in published research, please cite the most appropriate paper(s):
-## 
-## [36m-[39m Guangchuang Yu. Using ggtree to visualize data on tree-like structures. Current Protocols in Bioinformatics, 2020, 69:e96. doi:10.1002/cpbi.96
-## [36m-[39m Guangchuang Yu, Tommy Tsan-Yuk Lam, Huachen Zhu, Yi Guan. Two methods for mapping and visualizing associated data on phylogeny using ggtree. Molecular Biology and Evolution 2018, 35(12):3041-3043. doi:10.1093/molbev/msy194
-## [36m-[39m Guangchuang Yu, David Smith, Huachen Zhu, Yi Guan, Tommy Tsan-Yuk Lam. ggtree: an R package for visualization and annotation of phylogenetic trees with their covariates and other associated data. Methods in Ecology and Evolution 2017, 8(1):28-36. doi:10.1111/2041-210X.12628</code></pre>
 <pre class="r"><code>(tr1 &lt;- read.tree(&quot;tree1.newick&quot;))</code></pre>
 <pre><code>## 
 ## Phylogenetic tree with 5 tips and 4 internal nodes.
@@ -630,7 +642,7 @@ writeLines(quote_tree, &quot;quote_tree.newick&quot;)
 ##     }
 ##     obj
 ## }
-## &lt;bytecode: 0x0000000015400d70&gt;
+## &lt;bytecode: 0x0000000015ab7168&gt;
 ## &lt;environment: namespace:ape&gt;</code></pre>
 <p>经查可能与 <code>single_quotes()</code> 这个函数的功能有关。</p>
 <p>考虑到这种情况仅出现在 <strong>多行</strong> 且 <strong>带引号</strong> 的时候， 那么最简单的解决方法就是把多行变成单行。</p>
@@ -654,6 +666,51 @@ read.tree(text = tree)</code></pre>
 ## 
 ## Rooted; includes branch lengths.</code></pre>
 <p>这样就搞定了。</p>
+</div>
+<div id="更新-treeio-中的函数" class="section level2">
+<h2>更新 <code>treeio</code> 中的函数？</h2>
+<pre class="r"><code>read.newick &lt;- function(file, node.label = &quot;label&quot;, ...) {
+    node.label &lt;- match.arg(node.label, c(&quot;support&quot;, &quot;label&quot;))
+    tree_data &lt;- scan(file = file, what = &quot;&quot;, sep = &quot;\n&quot;, quiet = TRUE, ...)
+    tree_data &lt;- paste0(tree_data, collapse = &quot;&quot;)
+    tree &lt;- read.tree(text = tree_data)
+    if (node.label == &quot;label&quot;)
+        return(tree)
+
+    df &lt;- tibble(node = nodeIds(tree),
+                     support = as.numeric(tree$node.label))
+
+    tree$node.label &lt;- NULL
+    new(&quot;treedata&quot;,
+        phylo = tree,
+        data = df)
+}</code></pre>
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 4.0.3 (2020-10-10)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 10 x64 (build 19041)
+## 
+## Matrix products: default
+## 
+## locale:
+## [1] LC_COLLATE=Chinese (Simplified)_China.936 
+## [2] LC_CTYPE=Chinese (Simplified)_China.936   
+## [3] LC_MONETARY=Chinese (Simplified)_China.936
+## [4] LC_NUMERIC=C                              
+## [5] LC_TIME=Chinese (Simplified)_China.936    
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] ape_5.4-1
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_1.0.5      lattice_0.20-41 digest_0.6.27   grid_4.0.3     
+##  [5] nlme_3.1-150    magrittr_1.5    evaluate_0.14   rlang_0.4.8    
+##  [9] stringi_1.5.3   rmarkdown_2.5   tools_4.0.3     stringr_1.4.0  
+## [13] xfun_0.19       yaml_2.2.1      parallel_4.0.3  compiler_4.0.3 
+## [17] htmltools_0.5.0 knitr_1.30</code></pre>
 </div>
 
 

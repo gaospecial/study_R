@@ -1,6 +1,37 @@
 使用 `read.tree()` 读取 LTP newick 格式的树文件时出现了错误。
 初步定为可能是因为其不适应多行造成的，于是做如下实验。
 
+``` r
+library(ape)
+LSU_file <- "https://www.arb-silva.de/fileadmin/silva_databases/living_tree/LTP_release_123/LSU_release_02_2017/LTPs123_LSU_tree.newick"
+SSU_file <- "https://www.arb-silva.de/fileadmin/silva_databases/living_tree/LTP_release_132/LTPs132_SSU_tree.newick"
+read.tree(LSU_file, skip = 11)
+```
+
+    ## 
+    ## Phylogenetic tree with 1614 tips and 1613 internal nodes.
+    ## 
+    ## Tip labels:
+    ##   Aeromonas_hydrophila_subsp._anaerogenes__AF508058__Aeromonadaceae, Aeromonas_hydrophila_subsp._hydrophila__CP000462__Aeromonadaceae, Aeromonas_media__AF508059__Aeromonadaceae, Aeromonas_salmonicida_subsp._salmonicida__AY987630__Aeromonadaceae, Aeromonas_salmonicida_subsp._pectinolytica__ARYZ01000149__Aeromonadaceae, Aeromonas_jandaei__AY138850__Aeromonadaceae, ...
+    ## Node labels:
+    ##   , Bacteria, , , , , ...
+    ## 
+    ## Rooted; includes branch lengths.
+
+``` r
+read.tree(SSU_file, skip = 15)
+```
+
+    ## 
+    ## Phylogenetic tree with 13903 tips and 13902 internal nodes.
+    ## 
+    ## Tip labels:
+    ##   FJ611848_Erwiniagerundensis_Erwiniaceae_ErwGerun, FJ611848_Erwiniagerundensis_Erwiniaceae_ErwGerun, FJ611848_Erwiniagerundensis_Erwiniaceae_ErwGerun, FJ611848_Erwiniagerundensis_Erwiniaceae_ErwGerun, FJ611848_Erwiniagerundensis_Erwiniaceae_ErwGerun, FJ611848_Erwiniagerundensis_Erwiniaceae_ErwGerun, ...
+    ## Node labels:
+    ##   , Bacteria, , , , , ...
+    ## 
+    ## Rooted; includes branch lengths.
+
 多行格式是否影响树的读取？
 --------------------------
 
@@ -23,22 +54,6 @@ writeLines(multiline_tree, "tree2.newick")
 ```
 
 **Read tree**
-
-``` r
-library(ggtree)
-```
-
-    ## Registered S3 method overwritten by 'treeio':
-    ##   method     from
-    ##   root.phylo ape
-
-    ## ggtree v2.4.0  For help: https://yulab-smu.github.io/treedata-book/
-    ## 
-    ## If you use ggtree in published research, please cite the most appropriate paper(s):
-    ## 
-    ## [36m-[39m Guangchuang Yu. Using ggtree to visualize data on tree-like structures. Current Protocols in Bioinformatics, 2020, 69:e96. doi:10.1002/cpbi.96
-    ## [36m-[39m Guangchuang Yu, Tommy Tsan-Yuk Lam, Huachen Zhu, Yi Guan. Two methods for mapping and visualizing associated data on phylogeny using ggtree. Molecular Biology and Evolution 2018, 35(12):3041-3043. doi:10.1093/molbev/msy194
-    ## [36m-[39m Guangchuang Yu, David Smith, Huachen Zhu, Yi Guan, Tommy Tsan-Yuk Lam. ggtree: an R package for visualization and annotation of phylogenetic trees with their covariates and other associated data. Methods in Ecology and Evolution 2017, 8(1):28-36. doi:10.1111/2041-210X.12628
 
 ``` r
 (tr1 <- read.tree("tree1.newick"))
@@ -230,7 +245,7 @@ ape::read.tree
     ##     }
     ##     obj
     ## }
-    ## <bytecode: 0x00000000155b13c0>
+    ## <bytecode: 0x00000000154ee0c8>
     ## <environment: namespace:ape>
 
 经查可能与 `single_quotes()` 这个函数的功能有关。
@@ -266,3 +281,55 @@ read.tree(text = tree_collapsed)
     ## Rooted; includes branch lengths.
 
 这样就搞定了。
+
+更新 `treeio` 中的函数？
+------------------------
+
+``` r
+read.newick <- function(file, node.label = "label", ...) {
+    node.label <- match.arg(node.label, c("support", "label"))
+    tree_data <- scan(file = file, what = "", sep = "\n", quiet = TRUE, ...)
+    tree_data <- paste0(tree_data, collapse = "")
+    tree <- read.tree(text = tree_data)
+    if (node.label == "label")
+        return(tree)
+
+    df <- tibble(node = nodeIds(tree),
+                     support = as.numeric(tree$node.label))
+
+    tree$node.label <- NULL
+    new("treedata",
+        phylo = tree,
+        data = df)
+}
+```
+
+``` r
+sessionInfo()
+```
+
+    ## R version 4.0.3 (2020-10-10)
+    ## Platform: x86_64-w64-mingw32/x64 (64-bit)
+    ## Running under: Windows 10 x64 (build 19041)
+    ## 
+    ## Matrix products: default
+    ## 
+    ## locale:
+    ## [1] LC_COLLATE=Chinese (Simplified)_China.936 
+    ## [2] LC_CTYPE=Chinese (Simplified)_China.936   
+    ## [3] LC_MONETARY=Chinese (Simplified)_China.936
+    ## [4] LC_NUMERIC=C                              
+    ## [5] LC_TIME=Chinese (Simplified)_China.936    
+    ## 
+    ## attached base packages:
+    ## [1] stats     graphics  grDevices utils     datasets  methods   base     
+    ## 
+    ## other attached packages:
+    ## [1] ape_5.4-1
+    ## 
+    ## loaded via a namespace (and not attached):
+    ##  [1] Rcpp_1.0.5      lattice_0.20-41 digest_0.6.27   grid_4.0.3     
+    ##  [5] nlme_3.1-150    magrittr_1.5    evaluate_0.14   rlang_0.4.8    
+    ##  [9] stringi_1.5.3   rmarkdown_2.5   tools_4.0.3     stringr_1.4.0  
+    ## [13] xfun_0.19       yaml_2.2.1      parallel_4.0.3  compiler_4.0.3 
+    ## [17] htmltools_0.5.0 knitr_1.30
