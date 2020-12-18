@@ -429,7 +429,10 @@ summary {
 </div>
 
 
-<p><code>bibliometrix</code> 使用 <code>load()</code> 函数来读取 R 数据，读取 <code>*.Rds</code> 时会出错。</p>
+<p>在 <code>bibliometrix</code> 中使用 <code>load()</code> 函数来读取 R 数据，读取 <code>*.Rds</code> 时会出错。</p>
+<p>要弄清楚这个问题，首先需要了解 R 数据格式的内涵</p>
+<div id="r-数据格式.rdata-.rda-.rds" class="section level2">
+<h2>R 数据格式（.RData, .Rda, .Rds）</h2>
 <p>问题和解答来自这里： <a href="https://stackoverflow.com/questions/21370132/r-data-formats-rdata-rda-rds-etc" class="uri">https://stackoverflow.com/questions/21370132/r-data-formats-rdata-rda-rds-etc</a></p>
 <p><strong>问题</strong></p>
 <blockquote>
@@ -496,6 +499,33 @@ c</code></pre>
 <pre><code>## Warning: file &#39;rds.rds&#39; has magic number &#39;X&#39;
 ##   Use of save versions prior to 2 is deprecated</code></pre>
 <pre><code>## Error in load(&quot;rds.rds&quot;): 復原文件幻数出错(文件可能有损坏)-- 没有载入任何数据</code></pre>
+</div>
+<div id="load-.rdata-时如何找到你要的对象" class="section level2">
+<h2>load() .RData 时如何找到你要的对象？</h2>
+<p>首先保存 3 个对象到 .RData 中</p>
+<pre class="r"><code>rm(list = ls())
+(a &lt;- 1)</code></pre>
+<pre><code>## [1] 1</code></pre>
+<pre class="r"><code>(b &lt;- &quot;a&quot;)</code></pre>
+<pre><code>## [1] &quot;a&quot;</code></pre>
+<pre class="r"><code>(c &lt;- 1:4)</code></pre>
+<pre><code>## [1] 1 2 3 4</code></pre>
+<pre class="r"><code>class(a)</code></pre>
+<pre><code>## [1] &quot;numeric&quot;</code></pre>
+<pre class="r"><code>class(b)</code></pre>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+<pre class="r"><code>class(c)</code></pre>
+<pre><code>## [1] &quot;integer&quot;</code></pre>
+<pre class="r"><code>save.image(file = &quot;three_obj.RData&quot;)</code></pre>
+<pre class="r"><code>(var &lt;- load(&quot;three_obj.RData&quot;))</code></pre>
+<pre><code>## [1] &quot;a&quot; &quot;b&quot; &quot;c&quot;</code></pre>
+<pre class="r"><code>(var_class &lt;- sapply(var, function(v) eval(parse(text = paste0(&quot;class(&quot;, v,&quot;)&quot;)))))</code></pre>
+<pre><code>##           a           b           c 
+##   &quot;numeric&quot; &quot;character&quot;   &quot;integer&quot;</code></pre>
+<pre class="r"><code>grep(&quot;character&quot;, var_class, fixed = TRUE)</code></pre>
+<pre><code>## [1] 2</code></pre>
+<p>Subsequently, we can find the only character variable.</p>
+</div>
 
 
 

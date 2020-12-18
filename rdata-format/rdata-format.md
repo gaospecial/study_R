@@ -1,4 +1,10 @@
-`bibliometrix` 使用 `load()` 函数来读取 R 数据，读取 `*.Rds` 时会出错。
+在 `bibliometrix` 中使用 `load()` 函数来读取 R 数据，读取 `*.Rds`
+时会出错。
+
+要弄清楚这个问题，首先需要了解 R 数据格式的内涵
+
+R 数据格式（.RData, .Rda, .Rds）
+--------------------------------
 
 问题和解答来自这里：
 <https://stackoverflow.com/questions/21370132/r-data-formats-rdata-rda-rds-etc>
@@ -155,3 +161,70 @@ load("rds.rds")
     ##   Use of save versions prior to 2 is deprecated
 
     ## Error in load("rds.rds"): 復原文件幻数出错(文件可能有损坏)-- 没有载入任何数据
+
+load() .RData 时如何找到你要的对象？
+------------------------------------
+
+首先保存 3 个对象到 .RData 中
+
+``` r
+rm(list = ls())
+(a <- 1)
+```
+
+    ## [1] 1
+
+``` r
+(b <- "a")
+```
+
+    ## [1] "a"
+
+``` r
+(c <- 1:4)
+```
+
+    ## [1] 1 2 3 4
+
+``` r
+class(a)
+```
+
+    ## [1] "numeric"
+
+``` r
+class(b)
+```
+
+    ## [1] "character"
+
+``` r
+class(c)
+```
+
+    ## [1] "integer"
+
+``` r
+save.image(file = "three_obj.RData")
+```
+
+``` r
+(var <- load("three_obj.RData"))
+```
+
+    ## [1] "a" "b" "c"
+
+``` r
+(var_class <- sapply(var, function(v) eval(parse(text = paste0("class(", v,")")))))
+```
+
+    ##           a           b           c 
+    ##   "numeric" "character"   "integer"
+
+``` r
+grep("character", var_class, fixed = TRUE)
+```
+
+    ## [1] 2
+
+Subsequently, we can find the only character variable.
