@@ -4,8 +4,9 @@ date: '2020-12-18'
 output: 
   md_document:
     variant: markdown_github
-
 ---
+
+# `r rmarkdown::metadata$title`
 
 我们构造一个常用的 `ggplot` 对象。
 
