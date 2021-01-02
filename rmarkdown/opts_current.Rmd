@@ -1,0 +1,46 @@
+---
+title: "动态设置 chunk option"
+author: "gaospecial@gmail.com"
+date: "2021-1-2"
+output: bookdown::html_document2
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{css}
+
+.figure {
+  text-align: center
+}
+```
+
+
+## 使用 `fig.cap`
+
+You can also embed plots, for example: Figure \@ref(fig:pressure)
+
+```{r pressure, fig.cap="压力有点大"}
+plot(pressure)
+```
+
+想动态设置图注的话，有没有更好的办法呢？（Figure  \@ref(fig:pressure-2)）。
+
+
+
+```{r pressure-2, fig.asp=1}
+opts_current$set(fig.cap = "这样可以吧？", 
+                 fig.asp = 1)
+plot(pressure)
+```
+
+
+不过 `opts_current` 实际上并没有实现想要的效果。这个函数被建议仅作为读取参数使用。
+
+> opts_current should be treated as read-only and you are supposed to only query 
+its values via `opts_current$get()`. Technically you could also call 
+`opts_current$set()` to change the values, but you are not recommended 
+to do so unless you understand the consequences.
+
