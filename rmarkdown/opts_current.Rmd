@@ -44,3 +44,26 @@ its values via `opts_current$get()`. Technically you could also call
 `opts_current$set()` to change the values, but you are not recommended 
 to do so unless you understand the consequences.
 
+
+尽管如此，还是可以通过变量来设置 chunk options。
+
+这个变量的值出现在当前 chunk 中即可，
+而出现在前面或者后面的同名变量会因为作用域的问题不可见。
+也可能是因为，chunk 里面的代码执行完毕之后，
+chunk options 才会被赋值。
+
+```{r}
+caption <- "我在前面"
+```
+
+
+```{r pressure-3, fig.asp=1, fig.cap=caption}
+caption <- "这样可以吧？"
+plot(pressure)
+```
+
+
+```{r pressure-4, fig.asp=1, fig.cap=caption}
+caption <- "这样会不会不可以吧？"
+plot(pressure)
+```
