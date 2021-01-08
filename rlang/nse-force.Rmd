@@ -1,0 +1,115 @@
+---
+title: "rlang 中与参数相关的特殊操作符"
+date: "2021-1-8"
+---
+
+## 奇妙的引用 - Quoting/defusing
+
+> The defusing operators `expr()` and `enquo()` prevent the evaluation of R code. **Defusing** is also known as **quoting**, and is done in base R by `quote()` and `substitute()`. When a function argument is defused, R doesn't return its value like it normally would but it returns the R expression describing how to make the value. These defused expressions are like blueprints for computing values. Source: <https://rlang.r-lib.org/reference/nse-defuse.html>
+
+引用可以避免 R 代码被解释和执行，但是仍然可以使用强制执行函数解释其内部的代码。
+
+```{r}
+# All these quoting functions have quasiquotation support. This
+# means that you can unquote (evaluate and inline) part of the
+# captured expression:
+what <- sym("bonjour")
+expr(say(what))
+#> say(what)
+expr(say(!!what))
+#> say(bonjour)
+
+```
+
+## 强制执行操作符
+
+`!!` 和 `!!!` 是 `rlang` 中定义的前缀操作符。`!!()` = `UQ()`, `!!!()` = `UQS()`。 不过，`UQ()` 函数目前已经逐渐不再使用，未来推荐使用 `!!()`。
+
+```{r}
+# Bad
+rlang::expr(mean(rlang::UQ(var) * 100))
+
+# Ok
+rlang::expr(mean(UQ(var) * 100))
+
+# Good
+rlang::expr(mean(!!var * 100))
+```
+
+`!!` 用来去掉参数的引号。
+
+```{r}
+library(tidyverse)
+x <- expr(a+b+c)
+x
+expr(f(!!x,y))
+```
+
+```{r}
+var <- "x"
+val <- c(4, 3, 9)
+
+tibble(!!var := val)
+#> # A tibble: 3 x 1
+#>       x
+#>   <dbl>
+#> 1     4
+#> 2     3
+#> 3     9
+```
+
+`!!` 常用的一个情况是访问 `data.frame` 中的一个变量。
+
+```{r}
+# The environment variable `var` refers to the data-variable
+# `height`
+var <- sym("height")
+
+# We force `var`, which substitutes it with `height`
+starwars %>%
+  summarise(avg = mean(!!var, na.rm = TRUE))
+```
+
+这相当于执行了下面的操作。
+
+```{r}
+starwars %>%
+  summarise(avg = mean(height, na.rm = TRUE))
+```
+
+`!!!`用来去掉**多个**参数的引号。
+
+```{r}
+vars <- syms(c("height", "mass"))
+
+# Force-splicing is equivalent to supplying the elements separately
+starwars %>% select(!!!vars)
+starwars %>% select(height, mass)
+```
+
+> 之所以引入新的 `:=` 赋值操作符是因为`=`不接受表达式（expression）作为参数的名称。`:=` 在此处的作用与 `=` 类似，但是更灵活。
+
+## 双大括号
+
+这个情况比较特殊，通常是在处理函数的参数时被使用。
+
+```{r}
+# Force-defuse all function arguments that might contain
+# data-variables by embracing them with {{ }}
+mean_by <- function(data, by, var) {
+  data %>%
+    group_by({{ by }}) %>%
+    summarise(avg = mean({{ var }}, na.rm = TRUE))
+}
+
+# The env-variables `by` and `var` are forced but defused.
+# The data-variables they contain are evaluated by dplyr later on
+# in data context.
+iris %>% mean_by(by = Species, var = Sepal.Width)
+
+```
+
+更多内容参考:
+
+-   <https://adv-r.hadley.nz/quasiquotation.html>
+-   <https://rlang.r-lib.org/reference/nse-force.html>
