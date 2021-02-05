@@ -1,0 +1,18 @@
+---
+title: "HTML document"
+output: 
+  html_document:
+    df_print: tibble
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Tibble
+
+```{r}
+mtcars
+```
+
+

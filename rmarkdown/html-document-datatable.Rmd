@@ -1,0 +1,22 @@
+---
+title: "HTML document"
+output: 
+  html_document:
+    df_print: !expr DT::datatable
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Function
+
+```{r}
+mtcars
+```
+
+
+```{r}
+DT::datatable(mtcars)
+```
+

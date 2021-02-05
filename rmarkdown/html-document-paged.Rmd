@@ -1,0 +1,35 @@
+---
+title: "HTML document"
+output: 
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Paged
+
+```{r}
+mtcars
+```
+
+显示5行5列，最多30行。
+
+```{r cols.print=5, rows.print = 5, max.print = 30}
+mtcars
+```
+
+仅显示2个页面链接
+
+```{r pages.print = 2, rows.print = 5}
+mtcars
+```
+
+关闭分页显示。
+
+```{r paged.print = FALSE}
+mtcars
+```
+
