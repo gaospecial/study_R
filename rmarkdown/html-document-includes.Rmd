@@ -1,0 +1,14 @@
+---
+title: "HTML document"
+output: 
+  html_document:
+    includes:
+      after_body: |
+        "<li>a label</li>"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+`includes` 中并不能直接使用 HTML 代码。
